@@ -1,0 +1,1 @@
+DELETE FROM temptoolfour.temp_signal_output;
