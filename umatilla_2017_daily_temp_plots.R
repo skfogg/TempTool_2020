@@ -156,7 +156,7 @@ for(i in 1:4){
         col = highcol)
 
   axis(side = 2, at = seq(-6, 26, by = 2), labels = c("-6", "", "-2", "", "2", "", "6", "", "10", "", "14", "", "18", "", "22", "", "26"))
-  axis(1, at = c(1,24, 48, 72), labels = c(15, 16, 17, 18))
+  axis(1, at = c(1, 24, 48, 72), labels = c(15, 16, 17, 18))
   mtext(c("January", "April", "July", "October")[i], side = 3, line = 1, cex = 2, font = 2)
 }
 
