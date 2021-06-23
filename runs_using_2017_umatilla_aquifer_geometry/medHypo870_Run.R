@@ -11,7 +11,7 @@ library(xts)
 library(lubridate)
 library(temptool)
 
-connect <- odbcConnect("TempToolFourANSI", uid="root", pwd="password")
+connect <- odbcConnect("TempToolFourANSI", uid="root", pwd="MSUFLL!!")
 
 mediumHypoBins <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 23.96, b=-1.39)
 load(file = "C:/Users/t24x137/Desktop/Old Tower Desktop Folders/TempToolModelTesting2/medHypoInitTemps.RData")
