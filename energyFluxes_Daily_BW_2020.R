@@ -6,17 +6,16 @@ library(devtools)
 #install_github("FluvialLandscapeLab/hydrogeom")
 library(hydrogeom)
 
-#"d:/Users/sarah.fogg/Desktop/TempToolModelTesting2/"
-fileslocation <- "C:\\Users\\t24x137\\Desktop\\Old Tower Desktop Folders\\TempToolModelTesting2\\"
-setwd(fileslocation)
+# fileslocation <- "C:/Users/t24x137/Desktop/TempTool_2020"
+# setwd(fileslocation)
 
-load("noShadeNoHypo.RData")
-load("shade30.RData")
-load("shade60.RData")
-load("shade90.RData")
-load("highHypo.RData")
-load("medHypo.RData")
-load("littleHypo.RData")
+load("model_output/noShadeNoHypo.RData")
+load("model_output/shade30.RData")
+load("model_output/shade60.RData")
+load("model_output/shade90.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/highHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/medHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/littleHypo870.RData")
 
 load("longwaveNetHighHypo.RData")
 load("longwaveNetLittleHypo.RData")
@@ -91,9 +90,9 @@ sensibleHighHypo <- xts(zoo(sensibleHighHypo$svValue, order.by = seq(mdy_hms("01
 
 littlehypoBins <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 11.98, b=-1.39)
 #lFluxTot <- sum(littlehypoBins$returning)
-littleHypoChannelT <- coredata(hypolit) 
+littleHypoChannelT <- coredata(hypolit)
 for(i in 2:19){
-  assign(paste0("tsz", i-1, "T_little"), 
+  assign(paste0("tsz", i-1, "T_little"),
          as.vector(coredata(xts(zoo(coredata(littleHypo[[i]]$svValue), order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065))))))
 }
 hypoTempNames <- paste0("tsz", 1:18, "T_little")
@@ -111,9 +110,9 @@ testvector <- rep(c(3,2,0.5), each = 4)
 
 mFluxTot <- sum(mediumhypoBins$returning)
 mediumhypoBins <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 23.96, b=-1.39)
-medHypoChannelT <- coredata(hypomed) 
+medHypoChannelT <- coredata(hypomed)
 for(i in 2:19){
-  assign(paste0("tsz", i-1, "T_med"), 
+  assign(paste0("tsz", i-1, "T_med"),
          as.vector(coredata(xts(zoo(coredata(medHypo[[i]]$svValue), order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065))))))
 }
 hypoTempNames <- paste0("tsz", 1:18, "T_med")
@@ -126,9 +125,9 @@ hypoJoulesFlux_med <- ((meanUpwellingTempMed - medHypoChannelT)*mediumhypoBins$e
 
 highhypoBins <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 35.94, b=-1.39)
 hFluxTot <- sum(highhypoBins$returning)
-highHypoChannelT <- coredata(hypohigh) 
+highHypoChannelT <- coredata(hypohigh)
 for(i in 2:19){
-  assign(paste0("tsz", i-1, "T_high"), 
+  assign(paste0("tsz", i-1, "T_high"),
          as.vector(coredata(xts(zoo(coredata(highHypo[[i]]$svValue), order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065))))))
 }
 hypoTempNames <- paste0("tsz", 1:18, "T_high")
@@ -171,28 +170,28 @@ layout(matrix(
   c(14, 1,4,7,10, 13,
     15, 2,5,8,11, 13,
     16, 3,6,9,12, 13
-  ), 
-  nrow = 3, ncol = 6, byrow = T), 
-  heights = c(1, 1, 1), 
+  ),
+  nrow = 3, ncol = 6, byrow = T),
+  heights = c(1, 1, 1),
   widths = c(0.3, 1, 1, 1, 1, 0.75))
 
 par(mar = c(4, 2, 4, 0), oma = c(0, 0, 0, 2), cex.axis = 2, cex.main = 2.5, lend = 2)
 for(i in 1:4){
-  
+
   kWsum30 <- shortwaveNet30[afewdays[i]] + longwaveNet30[afewdays[i]] + latent30[afewdays[i]] + sensible30[afewdays[i]]
   kWsum60 <- shortwaveNet60[afewdays[i]] + longwaveNet60[afewdays[i]] + latent60[afewdays[i]] + sensible60[afewdays[i]]
   kWsum90 <- shortwaveNet90[afewdays[i]] + longwaveNet90[afewdays[i]] + latent90[afewdays[i]] + sensible90[afewdays[i]]
-  
+
   kWsumtotal <- shortwaveNet30[afewdays] + longwaveNet30[afewdays] + latent30[afewdays] + sensible30[afewdays]
-  
+
   rangetoplot <- c(min(shortwaveNet30[afewdays], longwaveNet30[afewdays], sensible30[afewdays], latent30[afewdays], kWsumtotal) - 0.04,
                    max(shortwaveNet30[afewdays], longwaveNet30[afewdays], sensible30[afewdays], latent30[afewdays], kWsumtotal) + 0.04)
-  
-  plot.zoo(shortwaveNet30[afewdays[i]], 
-           ylim = rangetoplot, 
+
+  plot.zoo(shortwaveNet30[afewdays[i]],
+           ylim = rangetoplot,
            lty = shortwavelty,
            lwd = 2,
-           ylab = "", 
+           ylab = "",
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            xaxt = "n",
@@ -201,18 +200,18 @@ for(i in 1:4){
   lines(longwaveNet30[afewdays[i]], lty = longwavelty, lwd = 2)
   lines(latent30[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensible30[afewdays[i]], lty = sensiblelty, lwd = 2)
-  lines(kWsum30, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsum30,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
   axis(1, at = index(shortwaveNet30[afewdays[i]])[c(1,25,48)] + c(0,0,3600), labels = c(15, 16, 17))
   axis(2, at = c(-0.2, 0.0, 0.2, 0.4, 0.6), labels =  c("", "", "", "", ""))
-  
-  plot.zoo(shortwaveNet60[afewdays[i]], 
-           ylim = rangetoplot, 
-           lty = shortwavelty, 
+
+  plot.zoo(shortwaveNet60[afewdays[i]],
+           ylim = rangetoplot,
+           lty = shortwavelty,
            lwd = 2,
-           ylab = "", 
+           ylab = "",
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            xaxt = "n",
@@ -221,18 +220,18 @@ for(i in 1:4){
   lines(longwaveNet60[afewdays[i]],lty = longwavelty, lwd = 2)
   lines(latent60[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensible60[afewdays[i]], lty = sensiblelty, lwd = 2)
-  lines(kWsum60, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsum60,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
   axis(1, at = index(shortwaveNet30[afewdays[i]])[c(1,25,48)] + c(0,0,3600), labels = c(15, 16, 17))
   axis(2, at = c(-0.2, 0.0, 0.2, 0.4, 0.6), labels =  c("", "", "", "", ""))
-  
-  plot.zoo(shortwaveNet90[afewdays[i]], 
-           ylim = rangetoplot, 
-           lty = shortwavelty, 
+
+  plot.zoo(shortwaveNet90[afewdays[i]],
+           ylim = rangetoplot,
+           lty = shortwavelty,
            lwd = 2,
-           ylab = "", 
+           ylab = "",
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            xaxt = "n",
@@ -241,18 +240,18 @@ for(i in 1:4){
   lines(longwaveNet90[afewdays[i]], lty = longwavelty, lwd = 2)
   lines(latent90[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensible90[afewdays[i]], lty = sensiblelty, lwd = 2)
-  lines(kWsum90, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsum90,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
   axis(1, at = index(shortwaveNet30[afewdays[i]])[c(1,25,48)] + c(0,0,3600), labels = c(15, 16, 17))
   axis(2, at = c(-0.2, 0.0, 0.2, 0.4, 0.6), labels = c("", "", "", "", ""))
-  
+
 }
 
 #### plot 13 (legend) ####
 plot(x = 1:10, y = 1:10, type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "", frame.plot = F)
-legend("center", c("Shortwave", "Longwave", "Sensible", "Latent", "Total"), 
+legend("center", c("Shortwave", "Longwave", "Sensible", "Latent", "Total"),
        lty = c(shortwavelty, longwavelty, sensiblelty, latentlty, totallty),
        title = "Legend",
        lwd = c(2,2,2,2,3),
@@ -288,27 +287,27 @@ layout(matrix(
   c(14, 1,4,7,10, 13,
     15, 2,5,8,11, 13,
     16, 3,6,9,12, 13
-  ), 
-  nrow = 3, ncol = 6, byrow = T), 
-  heights = c(1, 1, 1), 
+  ),
+  nrow = 3, ncol = 6, byrow = T),
+  heights = c(1, 1, 1),
   widths = c(0.3, 1, 1, 1, 1, 0.75))
 
 par(mar = c(4, 2, 4, 0), oma = c(0, 0, 0, 2), cex.axis = 2, cex.main = 2.5, lend = 2)
 for(i in 1:4){
-  
+
   kWsumLittleHypo <- shortwaveNetLittleHypo[afewdays[i]] + longwaveNetLittleHypo[afewdays[i]] + latentLittleHypo[afewdays[i]] + sensibleLittleHypo[afewdays[i]] + hyporheicLittleHypo[afewdays[i]]
   kWsumMedHypo <- shortwaveNetMedHypo[afewdays[i]] + longwaveNetMedHypo[afewdays[i]] + latentMedHypo[afewdays[i]] + sensibleMedHypo[afewdays[i]] + hyporheicMedHypo[afewdays[i]]
   kWsumHighHypo <- shortwaveNetHighHypo[afewdays[i]] + longwaveNetHighHypo[afewdays[i]] + latentHighHypo[afewdays[i]] + sensibleHighHypo[afewdays[i]] + hyporheicHighHypo[afewdays[i]]
-  
+
   rangetoplot <- c(min(shortwaveNetHighHypo[afewdays], longwaveNetHighHypo[afewdays], sensibleHighHypo[afewdays], latentHighHypo[afewdays], kWsumHighHypo, hyporheicHighHypo[afewdays]) - 0.04,
                    max(shortwaveNetHighHypo[afewdays], longwaveNetHighHypo[afewdays], sensibleHighHypo[afewdays], latentHighHypo[afewdays], kWsumHighHypo, hyporheicHighHypo[afewdays]) + 0.04)
-  
-  
-  plot.zoo(shortwaveNetLittleHypo[afewdays[i]], 
-           ylim = rangetoplot, 
-           lty = shortwavelty, 
+
+
+  plot.zoo(shortwaveNetLittleHypo[afewdays[i]],
+           ylim = rangetoplot,
+           lty = shortwavelty,
            lwd = 2,
-           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")), 
+           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")),
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            main = month(afewdays[i], label = T, abbr = F))
@@ -317,16 +316,16 @@ for(i in 1:4){
   lines(latentLittleHypo[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensibleLittleHypo[afewdays[i]], lty = sensiblelty, lwd = 2)
   lines(hyporheicLittleHypo[afewdays[i]], lty = hyporheiclty, lwd = 2)
-  lines(kWsumLittleHypo, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsumLittleHypo,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
-  
-  plot.zoo(shortwaveNetMedHypo[afewdays[i]], 
-           ylim = rangetoplot, 
-           lty = shortwavelty, 
+
+  plot.zoo(shortwaveNetMedHypo[afewdays[i]],
+           ylim = rangetoplot,
+           lty = shortwavelty,
            lwd = 2,
-           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")), 
+           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")),
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            main = month(afewdays[i], label = T, abbr = F))
@@ -335,16 +334,16 @@ for(i in 1:4){
   lines(latentMedHypo[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensibleMedHypo[afewdays[i]], lty = sensiblelty, lwd = 2)
   lines(hyporheicMedHypo[afewdays[i]], lty = hyporheiclty, lwd = 2)
-  lines(kWsumMedHypo, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsumMedHypo,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
-  
-  plot.zoo(shortwaveNetHighHypo[afewdays[i]], 
-           ylim = rangetoplot, 
-           lty = shortwavelty, 
+
+  plot.zoo(shortwaveNetHighHypo[afewdays[i]],
+           ylim = rangetoplot,
+           lty = shortwavelty,
            lwd = 2,
-           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")), 
+           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")),
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            main = month(afewdays[i], label = T, abbr = F))
@@ -353,14 +352,14 @@ for(i in 1:4){
   lines(latentHighHypo[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensibleHighHypo[afewdays[i]], lty = sensiblelty, lwd = 2)
   lines(hyporheicHighHypo[afewdays[i]], lty = hyporheiclty, lwd = 2)
-  lines(kWsumHighHypo, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsumHighHypo,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
 }
 #### plot 13 (legend) ####
 plot(x = 1:10, y = 1:10, type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "", frame.plot = F)
-legend("center", c("Shortwave", "Longwave", "Sensible", "Latent", "Hyporheic","Total"), 
+legend("center", c("Shortwave", "Longwave", "Sensible", "Latent", "Hyporheic","Total"),
        lty = c(shortwavelty, longwavelty, sensiblelty, latentlty, hyporheiclty, totallty),
        title = "Energy Flux:",
        lwd = c(2,2,2,2,2,3),
@@ -398,13 +397,13 @@ layout(matrix(
     31, 2, 9, 16, 23, 29,
     32, 3, 10, 17, 24, 29,
     33, 4, 11, 18, 25, 29,
-    34, 5, 12, 19, 26, 29, 
-    35, 6, 13, 20, 27, 29, 
+    34, 5, 12, 19, 26, 29,
+    35, 6, 13, 20, 27, 29,
     36, 7, 14, 21, 28, 29,
     42, 42, 42, 42, 42, 42
-  ), 
-  nrow = 9, ncol = 6, byrow = T), 
-  heights = c(0.3, 1, 1, 1, 1, 1, 1, 1, 0.3), 
+  ),
+  nrow = 9, ncol = 6, byrow = T),
+  heights = c(0.3, 1, 1, 1, 1, 1, 1, 1, 0.3),
   widths = c(0.3, 1, 1, 1, 1, 0.75))
 
 par(mar = c(4, 2, 0, 0), oma = c(0, 0, 0, 2), cex.axis = 2, cex.main = 2.5, lend = 2)
@@ -416,22 +415,22 @@ for(i in 1:4){
   kWsum30 <- shortwaveNet30[afewdays[i]] + longwaveNet30[afewdays[i]] + latent30[afewdays[i]] + sensible30[afewdays[i]]
   kWsum60 <- shortwaveNet60[afewdays[i]] + longwaveNet60[afewdays[i]] + latent60[afewdays[i]] + sensible60[afewdays[i]]
   kWsum90 <- shortwaveNet90[afewdays[i]] + longwaveNet90[afewdays[i]] + latent90[afewdays[i]] + sensible90[afewdays[i]]
-  
+
   kWsumLittleHypo <- shortwaveNetLittleHypo[afewdays[i]] + longwaveNetLittleHypo[afewdays[i]] + latentLittleHypo[afewdays[i]] + sensibleLittleHypo[afewdays[i]] + hyporheicLittleHypo[afewdays[i]]
   kWsumMedHypo <- shortwaveNetMedHypo[afewdays[i]] + longwaveNetMedHypo[afewdays[i]] + latentMedHypo[afewdays[i]] + sensibleMedHypo[afewdays[i]] + hyporheicMedHypo[afewdays[i]]
   kWsumHighHypo <- shortwaveNetHighHypo[afewdays[i]] + longwaveNetHighHypo[afewdays[i]] + latentHighHypo[afewdays[i]] + sensibleHighHypo[afewdays[i]] + hyporheicHighHypo[afewdays[i]]
-  
+
   kWsumtotal <- shortwaveNet30[afewdays] + longwaveNet30[afewdays] + latent30[afewdays] + sensible30[afewdays]
-  
+
   rangetoplot <- c(min(shortwaveNetHighHypo[afewdays], longwaveNetHighHypo[afewdays], sensibleHighHypo[afewdays], latentHighHypo[afewdays], kWsumHighHypo, hyporheicHighHypo[afewdays]) - 0.04,
                    max(shortwaveNetHighHypo[afewdays], longwaveNetHighHypo[afewdays], sensibleHighHypo[afewdays], latentHighHypo[afewdays], kWsumHighHypo, hyporheicHighHypo[afewdays]) + 0.04)
-  
+
   ## REFERENCE ##
-  plot.zoo(shortwaveNetRef[afewdays[i]], 
-           ylim = rangetoplot, 
+  plot.zoo(shortwaveNetRef[afewdays[i]],
+           ylim = rangetoplot,
            lty = shortwavelty,
            lwd = 2,
-           ylab = "", 
+           ylab = "",
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            xaxt = "n",
@@ -440,21 +439,21 @@ for(i in 1:4){
   lines(longwaveNetRef[afewdays[i]], lty = longwavelty, lwd = 2)
   lines(latentRef[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensibleRef[afewdays[i]], lty = sensiblelty, lwd = 2)
-  lines(kWsumRef, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsumRef,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
   axis(1, at = index(shortwaveNet30[afewdays[i]])[c(1,25,48)] + c(0,0,3600), labels = c(15, 16, 17))
   axis(2, at = c(-0.2, 0.0, 0.2, 0.4, 0.6), labels =  c("", "", "", "", ""))
-  
-  
+
+
   ## SHADING ##
-  
-  plot.zoo(shortwaveNet30[afewdays[i]], 
-           ylim = rangetoplot, 
+
+  plot.zoo(shortwaveNet30[afewdays[i]],
+           ylim = rangetoplot,
            lty = shortwavelty,
            lwd = 2,
-           ylab = "", 
+           ylab = "",
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            xaxt = "n",
@@ -463,18 +462,18 @@ for(i in 1:4){
   lines(longwaveNet30[afewdays[i]], lty = longwavelty, lwd = 2)
   lines(latent30[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensible30[afewdays[i]], lty = sensiblelty, lwd = 2)
-  lines(kWsum30, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsum30,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
   axis(1, at = index(shortwaveNet30[afewdays[i]])[c(1,25,48)] + c(0,0,3600), labels = c(15, 16, 17))
   axis(2, at = c(-0.2, 0.0, 0.2, 0.4, 0.6), labels =  c("", "", "", "", ""))
-  
-  plot.zoo(shortwaveNet60[afewdays[i]], 
-           ylim = rangetoplot, 
-           lty = shortwavelty, 
+
+  plot.zoo(shortwaveNet60[afewdays[i]],
+           ylim = rangetoplot,
+           lty = shortwavelty,
            lwd = 2,
-           ylab = "", 
+           ylab = "",
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            xaxt = "n",
@@ -483,18 +482,18 @@ for(i in 1:4){
   lines(longwaveNet60[afewdays[i]],lty = longwavelty, lwd = 2)
   lines(latent60[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensible60[afewdays[i]], lty = sensiblelty, lwd = 2)
-  lines(kWsum60, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsum60,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
   axis(1, at = index(shortwaveNet30[afewdays[i]])[c(1,25,48)] + c(0,0,3600), labels = c(15, 16, 17))
   axis(2, at = c(-0.2, 0.0, 0.2, 0.4, 0.6), labels =  c("", "", "", "", ""))
-  
-  plot.zoo(shortwaveNet90[afewdays[i]], 
-           ylim = rangetoplot, 
-           lty = shortwavelty, 
+
+  plot.zoo(shortwaveNet90[afewdays[i]],
+           ylim = rangetoplot,
+           lty = shortwavelty,
            lwd = 2,
-           ylab = "", 
+           ylab = "",
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            xaxt = "n",
@@ -503,23 +502,23 @@ for(i in 1:4){
   lines(longwaveNet90[afewdays[i]], lty = longwavelty, lwd = 2)
   lines(latent90[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensible90[afewdays[i]], lty = sensiblelty, lwd = 2)
-  lines(kWsum90, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsum90,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
   axis(1, at = index(shortwaveNet30[afewdays[i]])[c(1,25,48)] + c(0,0,3600), labels = c(15, 16, 17))
   axis(2, at = c(-0.2, 0.0, 0.2, 0.4, 0.6), labels = c("", "", "", "", ""))
-  
+
   kWsumLittleHypo <- shortwaveNetLittleHypo[afewdays[i]] + longwaveNetLittleHypo[afewdays[i]] + latentLittleHypo[afewdays[i]] + sensibleLittleHypo[afewdays[i]] + hyporheicLittleHypo[afewdays[i]]
   kWsumMedHypo <- shortwaveNetMedHypo[afewdays[i]] + longwaveNetMedHypo[afewdays[i]] + latentMedHypo[afewdays[i]] + sensibleMedHypo[afewdays[i]] + hyporheicMedHypo[afewdays[i]]
   kWsumHighHypo <- shortwaveNetHighHypo[afewdays[i]] + longwaveNetHighHypo[afewdays[i]] + latentHighHypo[afewdays[i]] + sensibleHighHypo[afewdays[i]] + hyporheicHighHypo[afewdays[i]]
-  
-  
-  plot.zoo(shortwaveNetLittleHypo[afewdays[i]], 
-           ylim = rangetoplot, 
-           lty = shortwavelty, 
+
+
+  plot.zoo(shortwaveNetLittleHypo[afewdays[i]],
+           ylim = rangetoplot,
+           lty = shortwavelty,
            lwd = 2,
-           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")), 
+           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")),
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            main = "",
@@ -529,18 +528,18 @@ for(i in 1:4){
   lines(latentLittleHypo[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensibleLittleHypo[afewdays[i]], lty = sensiblelty, lwd = 2)
   lines(hyporheicLittleHypo[afewdays[i]], lty = hyporheiclty, lwd = 2)
-  lines(kWsumLittleHypo, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsumLittleHypo,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
   axis(1, at = index(shortwaveNetLittleHypo[afewdays[i]])[c(1,25,48)] + c(0,0,3600), labels = c(15, 16, 17))
   axis(2, at = c(-0.2, 0.0, 0.2, 0.4, 0.6), labels =  c("", "", "", "", ""))
-  
-  plot.zoo(shortwaveNetMedHypo[afewdays[i]], 
-           ylim = rangetoplot, 
-           lty = shortwavelty, 
+
+  plot.zoo(shortwaveNetMedHypo[afewdays[i]],
+           ylim = rangetoplot,
+           lty = shortwavelty,
            lwd = 2,
-           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")), 
+           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")),
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            main = "",
@@ -550,19 +549,19 @@ for(i in 1:4){
   lines(latentMedHypo[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensibleMedHypo[afewdays[i]], lty = sensiblelty, lwd = 2)
   lines(hyporheicMedHypo[afewdays[i]], lty = hyporheiclty, lwd = 2)
-  lines(kWsumMedHypo, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsumMedHypo,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
   axis(1, at = index(shortwaveNetMedHypo[afewdays[i]])[c(1,25,48)] + c(0,0,3600), labels = c(15, 16, 17))
   axis(2, at = c(-0.2, 0.0, 0.2, 0.4, 0.6), labels =  c("", "", "", "", ""))
-  
-  
-  plot.zoo(shortwaveNetHighHypo[afewdays[i]], 
-           ylim = rangetoplot, 
-           lty = shortwavelty, 
+
+
+  plot.zoo(shortwaveNetHighHypo[afewdays[i]],
+           ylim = rangetoplot,
+           lty = shortwavelty,
            lwd = 2,
-           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")), 
+           ylab = expression(paste("Energy (kJ ", sec^-1, m^-2, ")")),
            xlab = "",
            yaxt = c("s", "n", "n", "n")[i],
            main = "",
@@ -572,19 +571,19 @@ for(i in 1:4){
   lines(latentHighHypo[afewdays[i]], lty = latentlty, lwd = 2)
   lines(sensibleHighHypo[afewdays[i]], lty = sensiblelty, lwd = 2)
   lines(hyporheicHighHypo[afewdays[i]], lty = hyporheiclty, lwd = 2)
-  lines(kWsumHighHypo, 
-        col = totalcol, 
-        lty = totallty, 
+  lines(kWsumHighHypo,
+        col = totalcol,
+        lty = totallty,
         lwd = totallwd)
   axis(1, at = index(shortwaveNetHighHypo[afewdays[i]])[c(1,25,48)] + c(0,0,3600), labels = c(15, 16, 17))
   axis(2, at = c(-0.2, 0.0, 0.2, 0.4, 0.6), labels =  c("", "", "", "", ""))
-  
+
 }
 
 #### plot 29 (legend) ####
 
 plot(x = 1:10, y = 1:10, type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "", frame.plot = F)
-legend("center", c("Shortwave", "Longwave", "Sensible", "Latent", "Hyporheic","Total"), 
+legend("center", c("Shortwave", "Longwave", "Sensible", "Latent", "Hyporheic","Total"),
        lty = c(shortwavelty, longwavelty, sensiblelty, latentlty, hyporheiclty, totallty),
        title = "Energy Flux",
        lwd = c(2,2,2,2,2,3),
