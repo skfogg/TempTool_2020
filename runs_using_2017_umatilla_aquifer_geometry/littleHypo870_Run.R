@@ -75,3 +75,47 @@ littleHypo870 <- outList
 save(littleHypo870, file = "C:/Users/t24x137/Desktop/TempTool_2020/littleHypo870.RData")
 
 
+
+latentLittleHypo <- sqlQuery(connect, "SELECT svValue FROM temptoolfour.temp_signal_output WHERE stateVal = 'HEATLATENTEVAP';")
+sensibleLittleHypo <- sqlQuery(connect, "SELECT svValue FROM temptoolfour.temp_signal_output WHERE stateVal = 'HEATSENSIBLE';")
+longwaveLittleHypo <- sqlQuery(connect, "SELECT svValue FROM temptoolfour.temp_signal_output WHERE stateVal = 'LONGWAVENET';")
+shortwaveLittleHypo <- sqlQuery(connect, "SELECT svValue FROM temptoolfour.temp_signal_output WHERE stateVal = 'SHORTWAVENET';")
+# channelheatHighHypo <- sqlQuery(connect, "SELECT svValue FROM temptoolfour.temp_signal_output WHERE stateVal = 'HEAT';")
+atmChannelHeatFlux <- sqlQuery(connect, "SELECT svValue FROM temptoolfour.temp_signal_output WHERE holonName = 'atm_0001-to';")
+
+hyporheicHeat1 <- sqlQuery(connect, "SELECT svValue FROM temptoolfour.temp_signal_output WHERE holonName = 'bedfrom_0001-to';")
+for(z in 1:18){
+  if(z < 10){
+    assign(paste0("tsz", z, "HeatOut"), sqlQuery(connect,
+                                                 paste0("SELECT svValue FROM temptoolfour.temp_signal_output WHERE holonName = 'bedfrom_000",z,"-to';"))
+    )
+  } else {
+    assign(paste0("tsz", z, "HeatOut"), sqlQuery(connect,
+                                                 paste0("SELECT svValue FROM temptoolfour.temp_signal_output WHERE holonName = 'bedfrom_00",z,"-to';"))
+    )
+  }
+}
+objectNames <- c(paste0("tsz", 1:18, "HeatOut"))
+# assign(paste0("output_run", runID), lapply(objectNames, get))
+
+names(objectNames) <- objectNames
+outList <- as.list(objectNames)
+
+for(i in 1:length(objectNames)){
+  outList[[i]] <- get(objectNames[i])
+}
+tszHeatOut_little <- outList
+
+save(tszHeatOut_little, file = "C:/Users/t24x137/Desktop/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/little/tszHeatOut_little.RData")
+save(latentLittleHypo, file = "C:/Users/t24x137/Desktop/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/little/latentLittleHypo.RData")
+save(sensibleLittleHypo, file = "C:/Users/t24x137/Desktop/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/little/sensibleLittleHypo.RData")
+save(longwaveLittleHypo, file = "C:/Users/t24x137/Desktop/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/little/longwaveLittleHypo.RData")
+save(shortwaveLittleHypo, file = "C:/Users/t24x137/Desktop/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/little/shortwaveLittleHypo.RData")
+save(atmChannelLittleFlux, file = "C:/Users/t24x137/Desktop/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/little/atmChannelHeatFlux_little.RData")
+
+plot(shortwaveLittleHypo[,], type = "l")
+plot(longwaveLittleHypo[,], type = "l")
+plot(sensibleLittleHypo[,], type = "l")
+plot(latentLittleHypo[,], type = "l")
+plot(channelheatLittleHypo[,], type = "l")
+

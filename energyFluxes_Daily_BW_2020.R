@@ -6,6 +6,7 @@ library(devtools)
 #install_github("FluvialLandscapeLab/hydrogeom")
 library(hydrogeom)
 
+<<<<<<< HEAD
 #"d:/Users/sarah.fogg/Desktop/TempToolModelTesting2/"
 fileslocation <- "C:\\Users\\t24x137\\Desktop\\Old Tower Desktop Folders\\TempToolModelTesting2\\"
 setwd(fileslocation)
@@ -13,10 +14,16 @@ setwd(fileslocation)
 load("runs_using_2017_umatilla_aquifer_geometry/highHypo870.RData")
 load("runs_using_2017_umatilla_aquifer_geometry/medHypo870.RData")
 load("runs_using_2017_umatilla_aquifer_geometry/littleHypo870.RData")
+=======
+# fileslocation <- "C:/Users/t24x137/Desktop/TempTool_2020"
+# setwd(fileslocation)
+
+>>>>>>> c6752770c09b3e8c00026e0228a974c53bbd0bcb
 load("model_output/noShadeNoHypo.RData")
 load("model_output/shade30.RData")
 load("model_output/shade60.RData")
 load("model_output/shade90.RData")
+<<<<<<< HEAD
 
 load("model_output/longwaveNetHighHypo.RData")
 load("model_output/longwaveNetLittleHypo.RData")
@@ -49,6 +56,44 @@ load("model_output/shortwaveNet90.RData")
 load("model_output/shortwaveNet60.RData")
 load("model_output/shortwaveNet30.RData")
 load("model_output/shortwaveNet.RData")
+=======
+load("runs_using_2017_umatilla_aquifer_geometry/highHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/medHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/littleHypo870.RData")
+
+load("longwaveNetHighHypo.RData")
+load("longwaveNetLittleHypo.RData")
+load("longwaveNetMedHypo.RData")
+load("longwaveNet90.RData")
+load("longwaveNet60.RData")
+load("longwaveNet30.RData")
+load("longwaveNet.RData")
+
+
+load("latentHighHypo.RData")
+load("latentLittleHypo.RData")
+load("latentMedHypo.RData")
+load("latent90.RData")
+load("latent60.RData")
+load("latent30.RData")
+load("latent.RData")
+
+load("sensibleHighHypo.RData")
+load("sensibleLittleHypo.RData")
+load("sensibleMedHypo.RData")
+load("sensible90.RData")
+load("sensible60.RData")
+load("sensible30.RData")
+load("sensible.RData")
+
+load("shortwaveNetHighHypo.RData")
+load("shortwaveNetLittleHypo.RData")
+load("shortwaveNetMedHypo.RData")
+load("shortwaveNet90.RData")
+load("shortwaveNet60.RData")
+load("shortwaveNet30.RData")
+load("shortwaveNet.RData")
+>>>>>>> c6752770c09b3e8c00026e0228a974c53bbd0bcb
 
 reference <- xts(zoo(noShadeNoHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 control <- xts(zoo(noShadeNoHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
