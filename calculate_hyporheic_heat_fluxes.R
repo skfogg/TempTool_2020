@@ -63,6 +63,6 @@ abline(h = 0, lty = 2)
 
 save("Q_b_high", Q_b_high, file = "runs_using_2017_umatilla_aquifer_geometry/high/Q_b_high.RData")
 save("Q_b_med", Q_b_med, file = "runs_using_2017_umatilla_aquifer_geometry/med/Q_b_med.RData")
-save("Q_b_high", Q_b_high, file = "runs_using_2017_umatilla_aquifer_geometry/little/Q_b_little.RData")
+save("Q_b_little", Q_b_little, file = "runs_using_2017_umatilla_aquifer_geometry/little/Q_b_little.RData")
 
 
