@@ -172,6 +172,9 @@ hypolittlebudget <- calc_budget(sw = shortwaveLittleHypo[year],
 hypomedbudget <- calc_budget(shortwaveMedHypo[year], longwaveMedHypo[year], sensibleMedHypo[year], latentMedHypo[year], hyporheicMedHypo[year])
 hypohighbudget <- calc_budget(shortwaveHighHypo[year], longwaveHighHypo[year], sensibleHighHypo[year], latentHighHypo[year], hyporheicHighHypo[year])
 
+allbudgets <- rbind(hypohighbudget, hypomedbudget, hypolittlebudget, refbudget, shade30budget, shade60budget, shade90budget)
+rownames(allbudgets) <- c("highHE", "modHE", "lowHE", "Control", "highShade", "modShade", "lowShade")
+write.csv(allbudgets, "umatilla_2017_annual_budgets.csv")
 
 
 ### COLOR SHWIZZ ###
