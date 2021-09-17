@@ -5,7 +5,7 @@ calc_budget <- function(sw, lw, sens, lat, hypo = 0){
   sensannual <- sum(abs(sens))/total
   latannual <- sum(abs(lat))/total
   hypoannual <- sum(abs(hypo))/total
-  frame <- data.frame(sw = swannual, lw = lwannual, sensible = sensannual, latent = latannual, hyporheic = hypoannual)
+  frame <- data.frame(sw = swannual, lw = lwannual, latent = latannual, sensible = sensannual, hyporheic = hypoannual)
 
   return(frame)
 }

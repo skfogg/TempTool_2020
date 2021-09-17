@@ -176,6 +176,22 @@ allbudgets <- rbind(hypohighbudget, hypomedbudget, hypolittlebudget, refbudget, 
 rownames(allbudgets) <- c("highHE", "modHE", "lowHE", "Control", "highShade", "modShade", "lowShade")
 write.csv(allbudgets, "umatilla_2017_annual_budgets.csv")
 
+source('~/TempTool_2020/calc_absolute_annual.R')
+refabs <- calc_absolute_annual(shortwaveNetRef[year], longwaveNetRef[year], sensibleRef[year], latentRef[year])
+shade30abs <- calc_absolute_annual(shortwaveNet30[year], longwaveNet30[year], sensible30[year], latent30[year])
+shade60abs <- calc_absolute_annual(shortwaveNet60[year], longwaveNet60[year], sensible60[year], latent60[year])
+shade90abs <- calc_absolute_annual(shortwaveNet90[year], longwaveNet90[year], sensible90[year], latent90[year])
+hypolittleabs <- calc_absolute_annual(sw = shortwaveLittleHypo[year],
+                                lw = longwaveLittleHypo[year],
+                                sens = sensibleLittleHypo[year],
+                                lat = latentLittleHypo[year],
+                                hypo = hyporheicLittleHypo[year])
+hypomedabs <- calc_absolute_annual(shortwaveMedHypo[year], longwaveMedHypo[year], sensibleMedHypo[year], latentMedHypo[year], hyporheicMedHypo[year])
+hypohighabs <- calc_absolute_annual(shortwaveHighHypo[year], longwaveHighHypo[year], sensibleHighHypo[year], latentHighHypo[year], hyporheicHighHypo[year])
+
+
+
+
 
 ### COLOR SHWIZZ ###
 mycolorpal <- hcl.colors(4, "Plasma")
@@ -499,7 +515,8 @@ barplot(matrix(c(hypohighbudget,
 dev.off()
 
 ##### ANNUAL BUDGET BAR CHART:ONE GRAPH #####
-png("plots/2017_umatilla/annualBudgetBars_oneGraph.png", width = 400*5, height = 700*5,
+fluxpal <- hcl.colors(5, "Plasma")
+png("plots/2017_umatilla/annualBudgetBars_oneGraph_color_v2.png", width = 400*5, height = 700*5,
     res = 72*5)
 par(mfrow = c(1,1),
     mar = c(3,3,1,1))
@@ -512,10 +529,29 @@ barplot(matrix(c(shade90budget,
                  hypohighbudget), nrow = 5, ncol = 7),
         beside = F,
         names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
-        horiz = T)
+        horiz = T,
+        col = adjustcolor(fluxpal, alpha.f = 0.8))
 
 dev.off()
 
+##### ANNUAL ABSOLUTE VALUE BARS #####
+png("plots/2017_umatilla/annualAnnualAbsoluteFluxBars_color_v3.png", width = 400*5, height = 700*5,
+    res = 72*5)
+par(mfrow = c(1,1),
+    mar = c(3,3,1,1))
+barplot(matrix(c(shade90abs*31499500*0.001,
+                 shade60abs*31499500*0.001,
+                 shade30abs*31499500*0.001,
+                 refabs*31499500*0.001,
+                 hypolittleabs*31499500*0.001,
+                 hypomedabs*31499500*0.001,
+                 hypohighabs*31499500*0.001), nrow = 5, ncol = 7),
+        beside = F,
+        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        horiz = T,
+        col = adjustcolor(fluxpal, alpha.f = 0.8))
+
+dev.off()
 
 #### ANNUAL PIE CHARTS ####
 pie_colors <- hcl.colors(5, "Dark 3")
@@ -636,23 +672,23 @@ plotscenariofluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, alph
         col = fluxcolors[2],
         lwd = borderlwd)
 
-  lines(as.zoo(sens[yrandhalf]),
+  lines(as.zoo(latent[yrandhalf]),
         col = adjustcolor(fluxcolors[3], alpha.f = alphanum),
         lwd = middlelwd)
-  lines(as.zoo(apply.daily(sens[yrandhalf], max)),
+  lines(as.zoo(apply.daily(latent[yrandhalf], max)),
         col = fluxcolors[3],
         lwd = borderlwd)
-  lines(as.zoo(apply.daily(sens[yrandhalf], min)),
+  lines(as.zoo(apply.daily(latent[yrandhalf], min)),
         col = fluxcolors[3],
         lwd = borderlwd)
 
-  lines(as.zoo(latent[yrandhalf]),
+  lines(as.zoo(sens[yrandhalf]),
         col = adjustcolor(fluxcolors[4], alpha.f = alphanum),
         lwd = middlelwd)
-  lines(as.zoo(apply.daily(latent[yrandhalf], max)),
+  lines(as.zoo(apply.daily(sens[yrandhalf], max)),
         col = fluxcolors[4],
         lwd = borderlwd)
-  lines(as.zoo(apply.daily(latent[yrandhalf], min)),
+  lines(as.zoo(apply.daily(sens[yrandhalf], min)),
         col = fluxcolors[4],
         lwd = borderlwd)
 
@@ -681,7 +717,7 @@ plotscenariofluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, alph
 fluxpal <- hcl.colors(5, "Plasma")
 alphaparam <- 0.7
 
-png("plots/2017_umatilla/perScenarioFluxPlots.png", width = 800*5, height = 1100*5,
+png("plots/2017_umatilla/perScenarioFluxPlots_v2.png", width = 800*5, height = 1100*5,
     res = 72*5)
 par(mfcol = c(4,2),
     cex.lab = 1.3)
