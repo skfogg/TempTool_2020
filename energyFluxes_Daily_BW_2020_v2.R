@@ -232,7 +232,10 @@ xaxisat <- c(ymd_hms("2016-01-01 00:00:00"), ymd_hms("2016-03-01 00:00:00"),
              ymd_hms("2017-01-01 00:00:00"), ymd_hms("2017-03-01 00:00:00"),
              ymd_hms("2017-05-01 00:00:00"), ymd_hms("2017-07-01 00:00:00"))
 
+###############################
 ##### Only partial fluxes #####
+###############################
+#### Controls ####
 png("plots/2017_umatilla/annualEnergyFluxes_color_budget.png", width = 800*5, height = 1100*5,
     res = 72*5)
 par(mfcol = c(5,2),
@@ -240,6 +243,7 @@ par(mfcol = c(5,2),
     cex.lab = 1.3,
     cex.axis = 1.2,
     oma = c(0,0,0,0))
+
 #### SW SHADE SCENARIOS ####
 plot.zoo(shortwaveNetRef[yrandhalf], col = refcol, lwd = lwdparam, ylim = swrange,
          ylab = expression(paste("Shortwave Radiation, ", Q[s]," (kW  ",m^-2, ")")),
@@ -493,6 +497,7 @@ text(x = ymd_hms("2016-01-25 00:00:00"), y = 0-0.2, labels = paste0(round(hypohi
 dev.off()
 #####
 
+###################################
 ##### ANNUAL BUDGET BAR CHART #####
 png("plots/2017_umatilla/annualBudgetBars_v2.png", width = 1000*5, height = 400*5,
     res = 72*5)
@@ -514,6 +519,7 @@ barplot(matrix(c(hypohighbudget,
         horiz = T)
 dev.off()
 
+##########################################
 ##### ANNUAL BUDGET BAR CHART:ONE GRAPH #####
 fluxpal <- hcl.colors(5, "Plasma")
 png("plots/2017_umatilla/annualBudgetBars_oneGraph_color_v2.png", width = 400*5, height = 700*5,
@@ -534,6 +540,7 @@ barplot(matrix(c(shade90budget,
 
 dev.off()
 
+####################################
 ##### ANNUAL ABSOLUTE VALUE BARS #####
 png("plots/2017_umatilla/annualAnnualAbsoluteFluxBars_color_v3.png", width = 400*5, height = 700*5,
     res = 72*5)
@@ -553,7 +560,8 @@ barplot(matrix(c(shade90abs*31499500*0.001,
 
 dev.off()
 
-#### ANNUAL PIE CHARTS ####
+##########################
+##### ANNUAL PIE CHARTS ####
 pie_colors <- hcl.colors(5, "Dark 3")
 pie_labels <- c("Shortwave", "Longwave", "Sensible", "Latent", "Hyporheic")
 label_cex <- 2
@@ -648,11 +656,14 @@ dev.off()
 # lines(as.zoo((shortwaveMedHypo + hyporheicMedHypo)[yrandhalf]), col = medhypogray, lwd = 2)
 # lines(as.zoo((shortwaveHighHypo + hyporheicHighHypo)[yrandhalf]), col = highhypogray, lwd = 2)
 
+
+#################################
 #### FLUX PLOTS PER SCENARIO ####
+#################################
 ##### plot function #####
 plotscenariofluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, alphanum, borderlwd, middlelwd, ...){
   plot.zoo(sw[yrandhalf],
-           col = adjustcolor(fluxcolors[1], alpha.f = alphanum+0.2),
+           col = adjustcolor(fluxcolors[1], alpha.f = alphanum),
            lwd = middlelwd,
            xaxt = "n",
            ylab = "Flux",
@@ -663,7 +674,7 @@ plotscenariofluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, alph
         lwd = borderlwd)
 
   lines(as.zoo(lw[yrandhalf]),
-        col = adjustcolor(fluxcolors[2], alpha.f = alphanum),
+        col = adjustcolor(fluxcolors[2], alpha.f = alphanum - 0.05),
         lwd = middlelwd)
   lines(as.zoo(apply.daily(lw[yrandhalf], max)),
         col = fluxcolors[2],
@@ -672,29 +683,32 @@ plotscenariofluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, alph
         col = fluxcolors[2],
         lwd = borderlwd)
 
+
   lines(as.zoo(latent[yrandhalf]),
-        col = adjustcolor(fluxcolors[3], alpha.f = alphanum),
+        col = adjustcolor(fluxcolors[4], alpha.f = alphanum - 0.1),
         lwd = middlelwd)
   lines(as.zoo(apply.daily(latent[yrandhalf], max)),
-        col = fluxcolors[3],
+        col = fluxcolors[4],
         lwd = borderlwd)
   lines(as.zoo(apply.daily(latent[yrandhalf], min)),
-        col = fluxcolors[3],
+        col = fluxcolors[4],
         lwd = borderlwd)
 
   lines(as.zoo(sens[yrandhalf]),
-        col = adjustcolor(fluxcolors[4], alpha.f = alphanum),
+        col = adjustcolor(fluxcolors[3], alpha.f = alphanum - 0.15),
         lwd = middlelwd)
   lines(as.zoo(apply.daily(sens[yrandhalf], max)),
-        col = fluxcolors[4],
+        col = fluxcolors[3],
         lwd = borderlwd)
   lines(as.zoo(apply.daily(sens[yrandhalf], min)),
-        col = fluxcolors[4],
+        col = fluxcolors[3],
         lwd = borderlwd)
+
+
 
   if(is.na(hypo) == F){
     lines(as.zoo(hypo[yrandhalf]),
-          col = adjustcolor(fluxcolors[5], alpha.f = alphanum - 0.15),
+          col = adjustcolor(fluxcolors[5], alpha.f = alphanum - 0.2),
           lwd = middlelwd)
     lines(as.zoo(apply.daily(hypo[yrandhalf], max)),
           col = fluxcolors[5],
@@ -702,8 +716,23 @@ plotscenariofluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, alph
     lines(as.zoo(apply.daily(hypo[yrandhalf], min)),
           col = fluxcolors[5],
           lwd = borderlwd)
+
+    abline(h = 0, col = "white", lwd = 3)
+
+    all <- sw + lw + sens + latent + hypo
+    lines(as.zoo(apply.daily(all, mean)),
+          lty = 2,
+          lwd = 2)
+  }else{
+
+    abline(h = 0, col = "white", lwd = 3)
+
+    all <- sw + lw + sens + latent
+    lines(as.zoo(apply.daily(all, mean)),
+          lty = 2,
+          lwd = 2)
   }
-  abline(h = 0, lty = 2)
+
   xaxislabels <- c("Jan", "Mar", "May", "Jul", "Sep", "Nov", "Jan", "Mar", "May", "Jul")
   xaxisat <- c(ymd_hms("2016-01-01 00:00:00"), ymd_hms("2016-03-01 00:00:00"),
                ymd_hms("2016-05-01 00:00:00"), ymd_hms("2016-07-01 00:00:00"),
@@ -819,7 +848,9 @@ dev.off()
 
 ##############
 
+################################################
 ###### FLUX PLOTS PER SCENARIO W/ NET FLUX #####
+################################################
 #### controls ####
 fluxpal <- hcl.colors(5, "Plasma")
 alphaparam <- 0.7
@@ -991,6 +1022,220 @@ plot.zoo(hypohighall[yrandhalf], col = highhypogray, lwd = lwdparam,
 axis(1, at = xaxisat, labels = xaxislabels)
 
 dev.off()
+
+
+
+##############
+
+############################################################
+###### FLUX PLOTS PER SCENARIO W/ NET FLUX ON ONE PLOT #####
+############################################################
+#### controls ####
+fluxpal <- hcl.colors(5, "Plasma")
+alphaparam <- 0.7
+shade30gray = hcl.colors(6, "Vik")[6]
+shade60gray = hcl.colors(6, "Vik")[5]
+shade90gray = hcl.colors(6, "Vik")[4]
+
+littlehypogray = hcl.colors(6, "Vik")[1]
+medhypogray = hcl.colors(6, "Vik")[2]
+highhypogray = hcl.colors(6, "Vik")[3]
+
+refcol = "black"
+
+png("plots/2017_umatilla/perScenarioFluxPlots_withNetFluxSameGraph.png",
+    width = 1100*5, height = 900*5,
+    res = 72*5)
+par(mfcol = c(4,3),
+    cex.lab = 1.3,
+    mar = c(2,3,1,1))
+
+##### REFERENCE/CONTROL #####
+plotscenariofluxes(sw = shortwaveNetRef,
+                   lw = longwaveNetRef,
+                   sens = sensibleRef,
+                   latent = latentRef,
+                   fluxcolors = fluxpal,
+                   alphanum = alphaparam,
+                   borderlwd = lwdparam,
+                   middlelwd = lwdparam,
+                   ylim = c(-0.35, 0.9))
+
+##### SHADE 30 ####
+plotscenariofluxes(sw = shortwaveNet30,
+                   lw = longwaveNet30,
+                   sens = sensible30,
+                   latent = latent30,
+                   fluxcolors = fluxpal,
+                   alphanum = alphaparam,
+                   borderlwd = lwdparam,
+                   middlelwd = lwdparam,
+                   ylim = c(-0.35, 0.9))
+
+##### SHADE 60 ####
+plotscenariofluxes(sw = shortwaveNet60,
+                   lw = longwaveNet60,
+                   sens = sensible60,
+                   latent = latent60,
+                   fluxcolors = fluxpal,
+                   alphanum = alphaparam,
+                   borderlwd = lwdparam,
+                   middlelwd = lwdparam,
+                   ylim = c(-0.35, 0.9))
+
+##### SHADE 90 ####
+plotscenariofluxes(sw = shortwaveNet90,
+                   lw = longwaveNet90,
+                   sens = sensible90,
+                   latent = latent90,
+                   fluxcolors = fluxpal,
+                   alphanum = alphaparam,
+                   borderlwd = lwdparam,
+                   middlelwd = lwdparam,
+                   ylim = c(-0.35, 0.9))
+
+##### REFERENCE/CONTROL #####
+plotscenariofluxes(sw = shortwaveNetRef,
+                   lw = longwaveNetRef,
+                   sens = sensibleRef,
+                   latent = latentRef,
+                   fluxcolors = fluxpal,
+                   alphanum = alphaparam,
+                   borderlwd = lwdparam,
+                   middlelwd = lwdparam,
+                   ylim = c(-0.35, 0.9))
+
+##### HYPO LOW ####
+plotscenariofluxes(sw = shortwaveLittleHypo,
+                   lw = longwaveLittleHypo,
+                   sens = sensibleLittleHypo,
+                   latent = latentLittleHypo,
+                   hypo = hyporheicLittleHypo,
+                   fluxcolors = fluxpal,
+                   alphanum = alphaparam,
+                   borderlwd = lwdparam,
+                   middlelwd = lwdparam,
+                   ylim = c(-0.35, 0.9))
+
+
+##### HYPO MED ####
+plotscenariofluxes(sw = shortwaveMedHypo,
+                   lw = longwaveMedHypo,
+                   sens = sensibleMedHypo,
+                   latent = latentMedHypo,
+                   hypo = hyporheicMedHypo,
+                   fluxcolors = fluxpal,
+                   alphanum = alphaparam,
+                   borderlwd = lwdparam,
+                   middlelwd = lwdparam,
+                   ylim = c(-0.35, 0.9))
+
+
+##### HYPO HIGH ####
+plotscenariofluxes(sw = shortwaveHighHypo,
+                   lw = longwaveHighHypo,
+                   sens = sensibleHighHypo,
+                   latent = latentHighHypo,
+                   hypo = hyporheicHighHypo,
+                   fluxcolors = fluxpal,
+                   alphanum = alphaparam,
+                   borderlwd = lwdparam,
+                   middlelwd = lwdparam,
+                   ylim = c(-0.35, 0.9))
+
+#### REF/CONTROL NET ####
+plot.zoo(refall[yrandhalf], col = refcol, lwd = lwdparam,
+         ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
+         xaxt = "n",
+         ylim = refrange,
+         xlab = "Month")
+abline(h = 0, col = "white", lwd = 3)
+axis(1, at = xaxisat, labels = xaxislabels)
+#### Little Hypo/Shade 30 NET ####
+plot.zoo(hypolittleall[yrandhalf], col = adjustcolor(littlehypogray, alpha.f = 0.5), lwd = lwdparam,
+         ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
+         xaxt = "n",
+         ylim = refrange,
+         xlab = "Month")
+lines(as.zoo(apply.daily(hypolittleall[yrandhalf], max)),
+      col = littlehypogray,
+      lwd = 2)
+lines(as.zoo(apply.daily(hypolittleall[yrandhalf], min)),
+      col = littlehypogray,
+      lwd = 2)
+
+lines(as.zoo(shade30all[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.5), lwd = lwdparam,
+         ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
+         xaxt = "n",
+         ylim = refrange,
+         xlab = "Month")
+lines(as.zoo(apply.daily(shade30all[yrandhalf], max)),
+      col = shade30gray,
+      lwd = 2)
+lines(as.zoo(apply.daily(shade30all[yrandhalf], min)),
+      col = shade30gray,
+      lwd = 2)
+
+abline(h = 0, col = "white", lwd = 3)
+axis(1, at = xaxisat, labels = xaxislabels)
+#### Moderate Hypo/Shade 60 NET ####
+plot.zoo(hypomedall[yrandhalf], col = adjustcolor(medhypogray, alpha.f = 0.5), lwd = lwdparam,
+         ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
+         xaxt = "n",
+         ylim = refrange,
+         xlab = "Month")
+lines(as.zoo(apply.daily(hypomedall[yrandhalf], max)),
+      col = medhypogray,
+      lwd = 2)
+lines(as.zoo(apply.daily(hypomedall[yrandhalf], min)),
+      col = medhypogray,
+      lwd = 2)
+
+lines(as.zoo(shade60all[yrandhalf]), col = adjustcolor(shade60gray, alpha.f = 0.5), lwd = lwdparam,
+         ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
+         xaxt = "n",
+         ylim = refrange,
+         xlab = "Month")
+lines(as.zoo(apply.daily(shade60all[yrandhalf], max)),
+      col = shade60gray,
+      lwd = 2)
+lines(as.zoo(apply.daily(shade60all[yrandhalf], min)),
+      col = shade60gray,
+      lwd = 2)
+abline(h = 0, col = "white", lwd = 3)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+#### High Hypo/Shade 90 NET ####
+plot.zoo(hypohighall[yrandhalf], col = adjustcolor(highhypogray, alpha.f = 0.5), lwd = lwdparam,
+         ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
+         xaxt = "n",
+         ylim = refrange,
+         xlab = "Month")
+lines(as.zoo(apply.daily(hypohighall[yrandhalf], max)),
+      col = highhypogray,
+      lwd = 2)
+lines(as.zoo(apply.daily(hypohighall[yrandhalf], min)),
+      col = highhypogray,
+      lwd = 2)
+
+lines(as.zoo(shade90all[yrandhalf]), col = adjustcolor(shade90gray, alpha.f = 0.5), lwd = lwdparam,
+      ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
+      xaxt = "n",
+      ylim = refrange,
+      xlab = "Month")
+lines(as.zoo(apply.daily(shade90all[yrandhalf], max)),
+      col = shade90gray,
+      lwd = 2)
+lines(as.zoo(apply.daily(shade90all[yrandhalf], min)),
+      col = shade90gray,
+      lwd = 2)
+abline(h = 0, col = "white", lwd = 3)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+dev.off()
+
+
+
 
 
 

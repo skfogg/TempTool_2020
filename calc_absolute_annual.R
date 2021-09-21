@@ -5,7 +5,7 @@ calc_absolute_annual <- function(sw, lw, sens, lat, hypo = 0){
   sensannual <- sum(abs(sens))
   latannual <- sum(abs(lat))
   hypoannual <- sum(abs(hypo))
-  frame <- data.frame(sw = swannual, lw = lwannual, latent = latannual, sensible = sensannual, hyporheic = hypoannual)
+  frame <- data.frame(sw = swannual, lw = lwannual,  sensible = sensannual, latent = latannual, hyporheic = hypoannual)
 
   return(frame)
 }
