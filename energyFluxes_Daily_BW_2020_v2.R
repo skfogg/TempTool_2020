@@ -157,9 +157,12 @@ hyporheicHighHypo <- xts(zoo(Q_b_high, order.by = seq(mdy_hms("01-01-2014 00:00:
 
 
 afewdays <- c("2014-01-15/2014-01-16", "2014-04-15/2014-04-16", "2014-07-15/2014-07-16", "2014-10-15/2014-10-16")
-
-source('~/TempTool_2020/calc_budget.R')
 year <- "2016"
+
+
+##### CALCULATE BUDGETS ####
+source('~/TempTool_2020/calc_budget.R')
+
 refbudget <- calc_budget(shortwaveNetRef[year], longwaveNetRef[year], sensibleRef[year], latentRef[year])
 shade30budget <- calc_budget(shortwaveNet30[year], longwaveNet30[year], sensible30[year], latent30[year])
 shade60budget <- calc_budget(shortwaveNet60[year], longwaveNet60[year], sensible60[year], latent60[year])
@@ -176,6 +179,7 @@ allbudgets <- rbind(hypohighbudget, hypomedbudget, hypolittlebudget, refbudget, 
 rownames(allbudgets) <- c("highHE", "modHE", "lowHE", "Control", "highShade", "modShade", "lowShade")
 write.csv(allbudgets, "umatilla_2017_annual_budgets.csv")
 
+##### CALCULATE ABSOLUTE ANNUAL FLUX #####
 source('~/TempTool_2020/calc_absolute_annual.R')
 refabs <- calc_absolute_annual(shortwaveNetRef[year], longwaveNetRef[year], sensibleRef[year], latentRef[year])
 shade30abs <- calc_absolute_annual(shortwaveNet30[year], longwaveNet30[year], sensible30[year], latent30[year])
@@ -189,13 +193,66 @@ hypolittleabs <- calc_absolute_annual(sw = shortwaveLittleHypo[year],
 hypomedabs <- calc_absolute_annual(shortwaveMedHypo[year], longwaveMedHypo[year], sensibleMedHypo[year], latentMedHypo[year], hyporheicMedHypo[year])
 hypohighabs <- calc_absolute_annual(shortwaveHighHypo[year], longwaveHighHypo[year], sensibleHighHypo[year], latentHighHypo[year], hyporheicHighHypo[year])
 
+##### CALCULATE GAIN BUDGET & LOSS BUDGET #####
+## calc_budget2 treats the loss and gain as separate budgets
+source('~/TempTool_2020/calc_budget2.R')
+refbudget2 <- calc_budget2(shortwaveNetRef[year], longwaveNetRef[year], sensibleRef[year], latentRef[year])
+shade30budget2 <- calc_budget2(shortwaveNet30[year], longwaveNet30[year], sensible30[year], latent30[year])
+shade60budget2 <- calc_budget2(shortwaveNet60[year], longwaveNet60[year], sensible60[year], latent60[year])
+shade90budget2 <- calc_budget2(shortwaveNet90[year], longwaveNet90[year], sensible90[year], latent90[year])
+hypolittlebudget2 <- calc_budget2(sw = shortwaveLittleHypo[year],
+                                lw = longwaveLittleHypo[year],
+                                sens = sensibleLittleHypo[year],
+                                lat = latentLittleHypo[year],
+                                hypo = hyporheicLittleHypo[year])
+hypomedbudget2 <- calc_budget2(shortwaveMedHypo[year], longwaveMedHypo[year], sensibleMedHypo[year], latentMedHypo[year], hyporheicMedHypo[year])
+hypohighbudget2 <- calc_budget2(shortwaveHighHypo[year], longwaveHighHypo[year], sensibleHighHypo[year], latentHighHypo[year], hyporheicHighHypo[year])
+
+allbudgets2 <- rbind(hypohighbudget2, hypomedbudget2, hypolittlebudget2, refbudget2, shade30budget2, shade60budget2, shade90budget2)
+rownames(allbudgets2) <- c("highHE_gain", "highHE_loss",
+                          "modHE_gain", "modHE_loss",
+                          "lowHE_gain", "lowHE_loss",
+                          "control_gain", "control_loss",
+                          "highShade_gain", "highShade_loss",
+                          "modShade_gain", "modShade_loss",
+                          "lowShade_gain", "lowShade_loss")
+write.csv(allbudgets2, "umatilla_2017_annual_gainloss_budgets.csv")
+
+##### CALCULATE BUDGET 3 ####
+### calc_budget3 treats loss and gain as part of same total budget
+source('~/TempTool_2020/calc_budget3.R')
+refbudget3 <- calc_budget3(shortwaveNetRef[year], longwaveNetRef[year], sensibleRef[year], latentRef[year])
+shade30budget3 <- calc_budget3(shortwaveNet30[year], longwaveNet30[year], sensible30[year], latent30[year])
+shade60budget3 <- calc_budget3(shortwaveNet60[year], longwaveNet60[year], sensible60[year], latent60[year])
+shade90budget3 <- calc_budget3(shortwaveNet90[year], longwaveNet90[year], sensible90[year], latent90[year])
+hypolittlebudget3 <- calc_budget3(sw = shortwaveLittleHypo[year],
+                                  lw = longwaveLittleHypo[year],
+                                  sens = sensibleLittleHypo[year],
+                                  lat = latentLittleHypo[year],
+                                  hypo = hyporheicLittleHypo[year])
+hypomedbudget3 <- calc_budget3(shortwaveMedHypo[year], longwaveMedHypo[year], sensibleMedHypo[year], latentMedHypo[year], hyporheicMedHypo[year])
+hypohighbudget3 <- calc_budget3(shortwaveHighHypo[year], longwaveHighHypo[year], sensibleHighHypo[year], latentHighHypo[year], hyporheicHighHypo[year])
 
 
+##### CALCULATE ANNUAL FLUXES #####
+source('~/TempTool_2020/calc_annual_fluxes.R')
+refannflux <- calc_annual_fluxes(shortwaveNetRef[year], longwaveNetRef[year], sensibleRef[year], latentRef[year])
+shade30annflux <- calc_annual_fluxes(shortwaveNet30[year], longwaveNet30[year], sensible30[year], latent30[year])
+shade60annflux <- calc_annual_fluxes(shortwaveNet60[year], longwaveNet60[year], sensible60[year], latent60[year])
+shade90annflux <- calc_annual_fluxes(shortwaveNet90[year], longwaveNet90[year], sensible90[year], latent90[year])
+hypolittleannflux <- calc_annual_fluxes(sw = shortwaveLittleHypo[year],
+                                      lw = longwaveLittleHypo[year],
+                                      sens = sensibleLittleHypo[year],
+                                      lat = latentLittleHypo[year],
+                                      hypo = hyporheicLittleHypo[year])
+hypomedannflux <- calc_annual_fluxes(shortwaveMedHypo[year], longwaveMedHypo[year], sensibleMedHypo[year], latentMedHypo[year], hyporheicMedHypo[year])
+hypohighannflux <- calc_annual_fluxes(shortwaveHighHypo[year], longwaveHighHypo[year], sensibleHighHypo[year], latentHighHypo[year], hyporheicHighHypo[year])
+#####
 
 
 ### COLOR SHWIZZ ###
 mycolorpal <- hcl.colors(4, "Plasma")
-
+fluxpal <- hcl.colors(5, "Plasma")
 refcol <- mycolorpal[1]
 
 shade30gray <- mycolorpal[2]
@@ -207,6 +264,15 @@ medhypogray <- mycolorpal[3]
 highhypogray <- mycolorpal[4]
 
 highcollabel <- "yellow3"
+
+colmatrix <-data.frame(c = fluxpal, a = c(0.7, 0.65, 0.6, 0.55, 0.5))
+easyadjust <- function(x){
+  return(adjustcolor(x[,1], alpha.f = x[,2]))
+}
+for (i in 1:5){
+  colmatrix$adjusted[i] <- easyadjust(colmatrix[i,])
+}
+
 
 # shade30gray = "gray37"
 # shade60gray = "gray60"
@@ -231,6 +297,8 @@ xaxisat <- c(ymd_hms("2016-01-01 00:00:00"), ymd_hms("2016-03-01 00:00:00"),
              ymd_hms("2016-09-01 00:00:00"), ymd_hms("2016-11-01 00:00:00"),
              ymd_hms("2017-01-01 00:00:00"), ymd_hms("2017-03-01 00:00:00"),
              ymd_hms("2017-05-01 00:00:00"), ymd_hms("2017-07-01 00:00:00"))
+
+
 
 ###############################
 ##### Only partial fluxes #####
@@ -521,8 +589,8 @@ dev.off()
 
 ##########################################
 ##### ANNUAL BUDGET BAR CHART:ONE GRAPH #####
-fluxpal <- hcl.colors(5, "Plasma")
-png("plots/2017_umatilla/annualBudgetBars_oneGraph_color_v2.png", width = 400*5, height = 700*5,
+
+png("plots/2017_umatilla/annualBudgetBars_oneGraph_color_v4.png", width = 400*5, height = 700*5,
     res = 72*5)
 par(mfrow = c(1,1),
     mar = c(3,3,1,1))
@@ -536,13 +604,23 @@ barplot(matrix(c(shade90budget,
         beside = F,
         names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
         horiz = T,
-        col = adjustcolor(fluxpal, alpha.f = 0.8))
+        col = colmatrix$adjusted)
 
 dev.off()
 
+
+
+
+
+
+
+
+
+
+
 ####################################
 ##### ANNUAL ABSOLUTE VALUE BARS #####
-png("plots/2017_umatilla/annualAnnualAbsoluteFluxBars_color_v3.png", width = 400*5, height = 700*5,
+png("plots/2017_umatilla/annualAnnualAbsoluteFluxBars_color_v4.png", width = 400*5, height = 700*5,
     res = 72*5)
 par(mfrow = c(1,1),
     mar = c(3,3,1,1))
@@ -556,7 +634,7 @@ barplot(matrix(c(shade90abs*31499500*0.001,
         beside = F,
         names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
         horiz = T,
-        col = adjustcolor(fluxpal, alpha.f = 0.8))
+        col = colmatrix$adjusted)
 
 dev.off()
 
@@ -655,6 +733,109 @@ dev.off()
 # plot.zoo((shortwaveLittleHypo + hyporheicLittleHypo)[yrandhalf], col = littlehypogray, lwd = 2)
 # lines(as.zoo((shortwaveMedHypo + hyporheicMedHypo)[yrandhalf]), col = medhypogray, lwd = 2)
 # lines(as.zoo((shortwaveHighHypo + hyporheicHighHypo)[yrandhalf]), col = highhypogray, lwd = 2)
+
+###########################################
+##### ANNUAL GAIN/LOSS BUDGET BAR CHART #####
+png("plots/2017_umatilla/lossBudget_gainBudget.png", width = 800*5, height = 700*5,
+    res = 72*5)
+par(mfrow = c(1,2),
+    mar = c(3,3,1,1))
+barplot(matrix(c(shade90budget2[2,],
+                 shade60budget2[2,],
+                 shade30budget2[2,],
+                 refbudget2[2,],
+                 hypolittlebudget2[2,],
+                 hypomedbudget2[2,],
+                 hypohighbudget2[2,]), nrow = 5, ncol = 7),
+        beside = F,
+        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        horiz = T,
+        col = colmatrix$adjusted,
+        main = "Loss")
+
+barplot(matrix(c(shade90budget2[1,],
+                 shade60budget2[1,],
+                 shade30budget2[1,],
+                 refbudget2[1,],
+                 hypolittlebudget2[1,],
+                 hypomedbudget2[1,],
+                 hypohighbudget2[1,]), nrow = 5, ncol = 7),
+        beside = F,
+        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        horiz = T,
+        col = colmatrix$adjusted,
+        main = "Gain")
+dev.off()
+
+############################################################
+##### ANNUAL GAIN/LOSS BUDGET BAR CHART as same budget #####
+png("plots/2017_umatilla/lossANDgain_budget_v2.png", width = 800*5, height = 700*5,
+    res = 72*5)
+par(mfrow = c(1,2),
+    mar = c(3,3,1,1))
+barplot(matrix(c(shade90budget3[2,],
+                 shade60budget3[2,],
+                 shade30budget3[2,],
+                 refbudget3[2,],
+                 hypolittlebudget3[2,],
+                 hypomedbudget3[2,],
+                 hypohighbudget3[2,]), nrow = 5, ncol = 7),
+        beside = F,
+        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        horiz = T,
+        col = colmatrix$adjusted,
+        main = "Loss",
+        xlim = c(0,0.7))
+
+barplot(matrix(c(shade90budget3[1,],
+                 shade60budget3[1,],
+                 shade30budget3[1,],
+                 refbudget3[1,],
+                 hypolittlebudget3[1,],
+                 hypomedbudget3[1,],
+                 hypohighbudget3[1,]), nrow = 5, ncol = 7),
+        beside = F,
+        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        horiz = T,
+        col = colmatrix$adjusted,
+        main = "Gain",
+        xlim = c(0,0.7))
+dev.off()
+
+###########################################
+##### ANNUAL GAIN/LOSS FLUX BAR CHART #####
+png("plots/2017_umatilla/annualFluxLoss_annualFluxGain.png", width = 800*5, height = 700*5,
+    res = 72*5)
+par(mfrow = c(1,2),
+    mar = c(3,3,1,1))
+barplot(matrix(c(shade90annflux[2,],
+                 shade60annflux[2,],
+                 shade30annflux[2,],
+                 refannflux[2,],
+                 hypolittleannflux[2,],
+                 hypomedannflux[2,],
+                 hypohighannflux[2,]), nrow = 5, ncol = 7),
+        beside = F,
+        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        horiz = T,
+        col = colmatrix$adjusted,
+        main = "Loss",
+        xlim = c(-2800,0))
+barplot(matrix(c(shade90annflux[1,],
+                 shade60annflux[1,],
+                 shade30annflux[1,],
+                 refannflux[1,],
+                 hypolittleannflux[1,],
+                 hypomedannflux[1,],
+                 hypohighannflux[1,]), nrow = 5, ncol = 7),
+        beside = F,
+        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        horiz = T,
+        col = colmatrix$adjusted,
+        main = "Gain",
+        xlim = c(0,2800))
+dev.off()
+#####
 
 
 #################################

@@ -4,9 +4,9 @@ library(zoo)
 library(xts)
 library(plotrix)
 
-load("runs_using_2017_umatilla_aquifer_geometry/highHypo870.RData")
-load("runs_using_2017_umatilla_aquifer_geometry/medHypo870.RData")
-load("runs_using_2017_umatilla_aquifer_geometry/littleHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/high/highHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/med/medHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/little/littleHypo870.RData")
 load("model_output/noShadeNoHypo.RData")
 load("model_output/shade30.RData")
 load("model_output/shade60.RData")
@@ -57,6 +57,16 @@ littlehypogray = "gray37"
 medhypogray = "gray60"
 highhypogray = "gray85"
 
+
+shade30gray = hcl.colors(6, "Vik")[6]
+shade60gray = hcl.colors(6, "Vik")[5]
+shade90gray = hcl.colors(6, "Vik")[4]
+
+littlehypogray = hcl.colors(6, "Vik")[1]
+medhypogray = hcl.colors(6, "Vik")[2]
+highhypogray = hcl.colors(6, "Vik")[3]
+
+
 density = 25
 
 x <- layout(matrix(
@@ -87,7 +97,7 @@ phasepointcex = 6
 ###
 ###
 # OLD LOCATION: "d:/Users/sarah.fogg/Dropbox/PAPER1/figs/shadeHE_DailyMeans_AnnualMeanAndRange_AnnualPhaseShift_3.png"
-png("plots/2017_umatilla/AnnualTemperature.png",
+png("plots/2017_umatilla/AnnualTemperature_color.png",
     width = 2000*3,
     height = 1900*3,
     res = 72*3)
