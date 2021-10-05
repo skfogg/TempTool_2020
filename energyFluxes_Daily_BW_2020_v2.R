@@ -1337,14 +1337,21 @@ pie(c(sum(abs(shortwaveNet30[day])), sum(abs(longwaveNet30[day])), sum(abs(sensi
 
 
 ##### All Qs ######
-swrange <-  c(-0.35, 0.9)
-lwrange <- c(-0.35, 0.9)
-sensrange <- c(-0.35, 0.9)
-latrange <- c(-0.35, 0.9)
-hyporange <- c(-0.35, 0.9)
+swrange <-  c(0, 0.875)
+lwrange <- c(-0.4375, 0.4375)
+sensrange <- c(-0.4375, 0.4375)
+latrange <- c(-0.425, 0.4375)
+hyporange <- c(-0.4375, 0.4375)
+netrange <- c(-0.31, 0.59)
+
+fluxpal <- hcl.colors(5, "Plasma")
+
+netref <- "black"
+shadecols <- hcl.colors(6, "Vik", rev = T)[1:3]
+hypocols <- hcl.colors(6, "Vik")[1:3]
 
 
-png("plots/2017_umatilla/annualEnergyFluxes_allQs_equalylim_color.png", width = 800*5, height = 1100*5,
+png("plots/2017_umatilla/annualEnergyFluxes_allQs_equalylimrange_color.png", width = 800*5, height = 1100*5,
     res = 72*5)
 par(mfcol = c(6,2),
     mar = c(2,5,1,1),
@@ -1352,11 +1359,13 @@ par(mfcol = c(6,2),
     cex.axis = 1.2,
     oma = c(0,0,0,0))
 
-### Net energy flux Q_c ###
-plot.zoo(refall[yrandhalf], col = refcol, lwd = lwdparam,
+##### Net energy flux Q_c #####
+plot.zoo(refall[yrandhalf],
+         col = refcol,
+         lwd = lwdparam,
          ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
          xaxt = "n",
-         ylim = refrange)
+         ylim = netrange)
 lines(as.zoo(shade30all[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.6), lwd = lwdparam)
 lines(apply.daily(as.zoo(shade30all[yrandhalf]), max), col = adjustcolor(shade30gray, alpha.f = 1), lwd = lwdparam)
 lines(apply.daily(as.zoo(shade30all[yrandhalf]), min), col = adjustcolor(shade30gray, alpha.f = 1), lwd = lwdparam)
@@ -1371,8 +1380,11 @@ lines(apply.daily(as.zoo(shade90all[yrandhalf]), min), col = adjustcolor(shade90
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
-### SW SHADE SCENARIOS ###
-plot.zoo(shortwaveNetRef[yrandhalf], col = refcol, lwd = lwdparam, ylim = swrange,
+##### SW SHADE SCENARIOS #####
+plot.zoo(shortwaveNetRef[yrandhalf],
+         col = refcol,
+         lwd = lwdparam,
+         ylim = swrange,
          ylab = expression(paste("Shortwave Radiation, ", Q[s]," (kW  ",m^-2, ")")),
          xaxt = "n")
 lines(as.zoo(shortwaveNet30[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.6), lwd = lwdparam)
@@ -1386,7 +1398,7 @@ lines(as.zoo(apply.daily(shortwaveNet90[yrandhalf], max)), lwd = 2, col = shade9
 abline(h= 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
-### LW SHADE SCENARIOS ###
+##### LW SHADE SCENARIOS #####
 plot.zoo(longwaveNetRef[yrandhalf], col = refcol, ylim = lwrange, lwd = lwdparam,
          ylab = expression(paste("Longwave Radiation, ", Q[l]," (kW  ",m^-2, ")")),
          xaxt = "n")
@@ -1405,7 +1417,7 @@ abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
 
-### SENSIBLE SHADE SCENARIOS ###
+##### SENSIBLE SHADE SCENARIOS #####
 plot.zoo(sensibleRef[yrandhalf], col = refcol, ylim = sensrange, lwd = lwdparam,
          ylab = expression(paste("Sensible Heat, ", Q[h]," (kW  ",m^-2, ")")),
          xaxt = "n")
@@ -1425,7 +1437,7 @@ lines(as.zoo(apply.daily(sensible90[yrandhalf], min)), lwd = 2, col = shade90gra
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
-### LATENT SHADE SCENARIOS ###
+##### LATENT SHADE SCENARIOS #####
 plot.zoo(latentRef[yrandhalf], col = refcol, ylim = latrange, lwd = lwdparam,
          ylab = expression(paste("Latent Heat, ", Q[e]," (kW  ",m^-2, ")")),
          xaxt = "n")
@@ -1443,7 +1455,7 @@ lines(as.zoo(apply.daily(latent90[yrandhalf], min)), lwd = 2, col = shade90gray)
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
-### STREAMBED FLUX: SHADE SCENARIOS ###
+##### STREAMBED FLUX: SHADE SCENARIOS #####
 plot.zoo(sensible30[yrandhalf], col = shade30gray, ylim = hyporange,
          type = "n",
          xaxt = "n",
@@ -1451,12 +1463,12 @@ plot.zoo(sensible30[yrandhalf], col = shade30gray, ylim = hyporange,
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
-##########################################################
-### Net HEat FLux Q_c Hypo ###
+
+##### Net HEat FLux Q_c Hypo #####
 plot.zoo(refall[yrandhalf], col = refcol, lwd = lwdparam,
          ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
          xaxt = "n",
-         ylim = refrange)
+         ylim = netrange)
 lines(as.zoo(hypolittleall[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.6), lwd = lwdparam)
 lines(apply.daily(as.zoo(hypolittleall[yrandhalf]), max), col = adjustcolor(littlehypogray, alpha.f = 1), lwd = lwdparam)
 lines(apply.daily(as.zoo(hypolittleall[yrandhalf]), min), col = adjustcolor(littlehypogray, alpha.f = 1), lwd = lwdparam)
@@ -1472,7 +1484,7 @@ abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
 
-### SW: HYPORHEIC SCENARIOS ###
+##### SW: HYPORHEIC SCENARIOS #####
 plot.zoo(shortwaveNetRef[yrandhalf], col = refcol, lwd = lwdparam, ylim = swrange,
          ylab =  expression(paste("Shortwave Radiation, ", Q[s]," (kW  ",m^-2, ")")),
          xaxt = "n")
@@ -1487,7 +1499,7 @@ lines(as.zoo(apply.daily(shortwaveHighHypo[yrandhalf], max)), lwd = 2, col = hig
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
-### LW: HYPORHEIC SCENARIOS ###
+##### LW: HYPORHEIC SCENARIOS #####
 plot.zoo(longwaveNetRef[yrandhalf], col = refcol, ylim = lwrange, lwd = lwdparam,
          ylab = expression(paste("Longwave Radiation, ", Q[l]," (kW  ",m^-2, ")")),
          xaxt = "n")
@@ -1505,7 +1517,7 @@ lines(as.zoo(apply.daily(longwaveHighHypo[yrandhalf], min)), lwd = 2, col = high
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
-### SENSIBLE: HYPORHEIC SENARIOS ###
+##### SENSIBLE: HYPORHEIC SENARIOS #####
 plot.zoo(sensibleRef[yrandhalf], col = refcol, ylim = sensrange, lwd = lwdparam,
          ylab = expression(paste("Sensible Heat, ", Q[h]," (kW  ",m^-2, ")")),
          xaxt = "n")
@@ -1523,7 +1535,7 @@ lines(as.zoo(apply.daily(sensibleHighHypo[yrandhalf], min)), lwd = 2, col = high
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
-### LATENT: HYPORHEIC SCENARIOS ###
+##### LATENT: HYPORHEIC SCENARIOS #####
 plot.zoo(latentRef[yrandhalf], col = refcol, ylim = latrange, lwd = lwdparam,
          ylab = expression(paste("Latent Heat, ", Q[e]," (kW  ",m^-2, ")")),
          xaxt = "n")
@@ -1542,7 +1554,7 @@ lines(as.zoo(apply.daily(latentHighHypo[yrandhalf], min)), lwd = 2, col = highhy
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
-### HYPORHEIC: HYPORHEIC SCENARIOS ###
+##### HYPORHEIC: HYPORHEIC SCENARIOS #####
 plot.zoo(hyporheicLittleHypo[yrandhalf], col = littlehypogray, lwd = lwdparam, ylim = hyporange,
          ylab = expression(paste("Hyporheic Heat Flux, ", Q[b]," (kW  ",m^-2, ")")),
          xaxt = "n")
