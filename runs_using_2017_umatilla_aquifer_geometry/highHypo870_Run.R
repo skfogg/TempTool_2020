@@ -139,3 +139,11 @@ plot(longwaveHighHypo[,], type = "l")
 plot(sensibleHighHypo[,], type = "l")
 plot(latentHighHypo[,], type = "l")
 plot(channelheatHighHypo[,], type = "l")
+
+
+
+hypoHeatIn_high <- sqlQuery(connect, "SELECT svValue FROM temptoolfour.temp_signal_output WHERE holonName = 'bedto_0001-from';")
+
+save(hypoHeatIn_high, file = "C:/Users/t24x137/Desktop/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/high/hypoHeatIn_high.RData")
+
+

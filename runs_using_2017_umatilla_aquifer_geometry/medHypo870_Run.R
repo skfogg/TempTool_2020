@@ -125,3 +125,6 @@ plot(sensibleMedHypo[,], type = "l")
 plot(latentMedHypo[,], type = "l")
 plot(channelheatMedHypo[,], type = "l")
 
+hypoHeatIn_med <- sqlQuery(connect, "SELECT svValue FROM temptoolfour.temp_signal_output WHERE holonName = 'bedto_0001-from';")
+
+save(hypoHeatIn_med, file = "C:/Users/t24x137/Desktop/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/high/hypoHeatIn_med.RData")
