@@ -6,13 +6,57 @@ library(devtools)
 #install_github("FluvialLandscapeLab/hydrogeom")
 library(hydrogeom)
 
+<<<<<<< HEAD
+#"d:/Users/sarah.fogg/Desktop/TempToolModelTesting2/"
+fileslocation <- "C:\\Users\\t24x137\\Desktop\\Old Tower Desktop Folders\\TempToolModelTesting2\\"
+setwd(fileslocation)
+
+load("runs_using_2017_umatilla_aquifer_geometry/highHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/medHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/littleHypo870.RData")
+=======
 # fileslocation <- "C:/Users/t24x137/Desktop/TempTool_2020"
 # setwd(fileslocation)
 
+>>>>>>> c6752770c09b3e8c00026e0228a974c53bbd0bcb
 load("model_output/noShadeNoHypo.RData")
 load("model_output/shade30.RData")
 load("model_output/shade60.RData")
 load("model_output/shade90.RData")
+<<<<<<< HEAD
+
+load("model_output/longwaveNetHighHypo.RData")
+load("model_output/longwaveNetLittleHypo.RData")
+load("model_output/longwaveNetMedHypo.RData")
+load("model_output/longwaveNet90.RData")
+load("model_output/longwaveNet60.RData")
+load("model_output/longwaveNet30.RData")
+load("model_output/longwaveNet.RData")
+
+load("model_output/latentHighHypo.RData")
+load("model_output/latentLittleHypo.RData")
+load("model_output/latentMedHypo.RData")
+load("model_output/latent90.RData")
+load("model_output/latent60.RData")
+load("model_output/latent30.RData")
+load("model_output/latent.RData")
+
+load("model_output/sensibleHighHypo.RData")
+load("model_output/sensibleLittleHypo.RData")
+load("model_output/sensibleMedHypo.RData")
+load("model_output/sensible90.RData")
+load("model_output/sensible60.RData")
+load("model_output/sensible30.RData")
+load("model_output/sensible.RData")
+
+load("model_output/shortwaveNetHighHypo.RData")
+load("model_output/shortwaveNetLittleHypo.RData")
+load("model_output/shortwaveNetMedHypo.RData")
+load("model_output/shortwaveNet90.RData")
+load("model_output/shortwaveNet60.RData")
+load("model_output/shortwaveNet30.RData")
+load("model_output/shortwaveNet.RData")
+=======
 load("runs_using_2017_umatilla_aquifer_geometry/highHypo870.RData")
 load("runs_using_2017_umatilla_aquifer_geometry/medHypo870.RData")
 load("runs_using_2017_umatilla_aquifer_geometry/littleHypo870.RData")
@@ -49,14 +93,16 @@ load("shortwaveNet90.RData")
 load("shortwaveNet60.RData")
 load("shortwaveNet30.RData")
 load("shortwaveNet.RData")
+>>>>>>> c6752770c09b3e8c00026e0228a974c53bbd0bcb
 
 reference <- xts(zoo(noShadeNoHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
+control <- xts(zoo(noShadeNoHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 shade90 <- shade90["2014/2018-01-01 00:00:00"]
 shade60 <- shade60["2014/2018-01-01 00:00:00"]
 shade30 <- shade30["2014/2018-01-01 00:00:00"]
-hypohigh <- xts(zoo(coredata(highHypo$cTemp$svValue), order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
-hypomed <- xts(zoo(coredata(medHypo$cTemp$svValue), order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
-hypolit <- xts(zoo(coredata(littleHypo$cTemp$svValue), order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
+hypohigh <- highHypo870$cTemp$svValue
+hypomed <- medHypo870$cTemp$svValue
+hypolit <- littleHypo870$cTemp$svValue
 
 shade30gray = "gray37"
 shade60gray = "gray60"

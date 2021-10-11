@@ -4,9 +4,9 @@ library(zoo)
 library(xts)
 library(plotrix)
 
-load("runs_using_2017_umatilla_aquifer_geometry/highHypo870.RData")
-load("runs_using_2017_umatilla_aquifer_geometry/medHypo870.RData")
-load("runs_using_2017_umatilla_aquifer_geometry/littleHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/high/highHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/med/medHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/little/littleHypo870.RData")
 load("model_output/noShadeNoHypo.RData")
 load("model_output/shade30.RData")
 load("model_output/shade60.RData")
@@ -45,7 +45,8 @@ diagnostics <- data.frame(dayofmin = c(yday(control[control$x == min(control[yea
                                        yday(shade90[shade90$x == max(shade90[yearandhalf])]),
                                        yday(hypolit[hypolit$svValue == max(hypolit[yearandhalf])]),
                                        yday(hypomed[hypomed$svValue == max(hypomed[yearandhalf])]),
-                                       yday(hypohigh[hypohigh$svValue == max(hypohigh[yearandhalf])])))
+                                       yday(hypohigh[hypohigh$svValue == max(hypohigh[yearandhalf])])),
+                          row.names = c("control", "shade30", "shade60", "shade90", "hypolit", "hypomed", "hypohigh"))
 
 
 shade30gray = "gray37"
@@ -55,6 +56,16 @@ shade90gray = "gray85"
 littlehypogray = "gray37"
 medhypogray = "gray60"
 highhypogray = "gray85"
+
+
+shade30gray = hcl.colors(6, "Vik")[6]
+shade60gray = hcl.colors(6, "Vik")[5]
+shade90gray = hcl.colors(6, "Vik")[4]
+
+littlehypogray = hcl.colors(6, "Vik")[1]
+medhypogray = hcl.colors(6, "Vik")[2]
+highhypogray = hcl.colors(6, "Vik")[3]
+
 
 density = 25
 
@@ -86,7 +97,7 @@ phasepointcex = 6
 ###
 ###
 # OLD LOCATION: "d:/Users/sarah.fogg/Dropbox/PAPER1/figs/shadeHE_DailyMeans_AnnualMeanAndRange_AnnualPhaseShift_3.png"
-png("C:/Users/t24x137/Desktop/TempTool_2020/plots/2017_umatilla/AnnualTemperature.png",
+png("plots/2017_umatilla/AnnualTemperature_color.png",
     width = 2000*3,
     height = 1900*3,
     res = 72*3)
@@ -413,8 +424,8 @@ points(x = 1:9,
        pch = 24,
        cex = phasepointcex,
        bg = c(shade30gray, shade60gray, shade90gray, NA, "black", NA, littlehypogray, medhypogray, highhypogray))
-abline(h = diagnostics$dayofmin[1], lty = 2, lwd = 2, col = "gray")
-abline(h = diagnostics$dayofmax[1] - 160, lty = 2, lwd = 2, col = "gray")
+abline(h = diagnostics$dayofmin[1], lty = 2, lwd = 3, col = "gray")
+abline(h = diagnostics$dayofmax[1] - 160, lty = 2, lwd = 3, col = "gray")
 points(c(5,5), c(diagnostics$dayofmax[1] - 160, diagnostics$dayofmin[1]),
        pch = c(24, 25),
        bg = "black",
@@ -463,7 +474,7 @@ mtext("High HE",
       cex = labelcex)
 mtext("Day of Extremums", side = 2, line = 6, cex = 3)
 mtext("D", cex = 7, side = 2, line = 12, at = 45, las = 2)
-axis(2, at = c(0, 7, 14, 21, 35-2, 42-2, 49-2), labels = c(0, 7, 14, 21, 35+160-2, 42+160-2, 49+160-2))
+axis(2, at = c(0, 7, 14, 21, 35-2, 42-2, 49-2), labels = c(1, 8, 15, 22, 36+160-2, 43+160-2, 50+160-2))
 axis.break(2, breakpos = 26, brw = 0.03)
 
 #### plot 6 ####

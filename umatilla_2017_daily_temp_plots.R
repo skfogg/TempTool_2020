@@ -8,7 +8,7 @@ library(zoo)
 library(xts)
 library(lubridate)
 library(temptool)
-setwd("C:/Users/t24x137/Desktop/TempTool_2020")
+#setwd("C:/Users/t24x137/Desktop/TempTool_2020")
 
 connect <- odbcConnect("TempToolFourANSI", uid="root", pwd="MSUFLL!!")
 
@@ -16,9 +16,9 @@ umatillaBins <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 35.95, b=-1.39)
 umatillaBins_2third <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 23.97, b=-1.39)
 umatillaBins_1third <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 11.98, b=-1.39)
 
-load("runs_using_2017_umatilla_aquifer_geometry/highHypo870.RData")
-load("runs_using_2017_umatilla_aquifer_geometry/medHypo870.RData")
-load("runs_using_2017_umatilla_aquifer_geometry/littleHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/high/highHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/med/medHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/little/littleHypo870.RData")
 load("model_output/noShadeNoHypo.RData")
 load("model_output/shade30.RData")
 load("model_output/shade60.RData")
@@ -34,6 +34,15 @@ hypohigh <- highHypo870$cTemp$svValue
 lowcol <- "gray37"
 medcol <- "gray60"
 highcol <- "grey85"
+
+shade30gray = hcl.colors(6, "Vik")[6]
+shade60gray = hcl.colors(6, "Vik")[5]
+shade90gray = hcl.colors(6, "Vik")[4]
+
+littlehypogray = hcl.colors(6, "Vik")[1]
+medhypogray = hcl.colors(6, "Vik")[2]
+highhypogray = hcl.colors(6, "Vik")[3]
+
 
 plotdays <- c("2016-01-15/2016-01-16", "2016-04-15/2016-04-16", "2016-07-15/2016-07-16", "2016-10-15/2016-10-16")
 yr1.5 <- "2016-01-01/2017-06-01"
@@ -108,7 +117,7 @@ layout.show(x)
 ######
 ######
 # OLD LOCATION: "d:/Users/sarah.fogg/Dropbox/PAPER1/figs/Temperature_Daily_ShadeAndHE_meanrangephase_3.png"
-png("C:/Users/t24x137/Desktop/TempTool_2020/plots/2017_umatilla/DailyTemperature.png",
+png("plots/2017_umatilla/DailyTemperature_color.png",
     height = 1700*3.5, width = 1850*3.5, res = 72*5)
 par(mfcol = c(2,4), cex.axis = 2, cex.lab = 2.3, cex.main = 2.7, lend = 1)
 layout(matrix(
@@ -147,13 +156,13 @@ for(i in 1:4){
         lty = reflty)
   lines(coredata(shade30[plotdays[i]]),
         lwd = linewidths,
-        col = lowcol)
+        col = shade30gray)
   lines(coredata(shade60[plotdays[i]]),
         lwd = linewidths,
-        col = medcol)
+        col = shade60gray)
   lines(coredata(shade90[plotdays[i]]),
         lwd = linewidths,
-        col = highcol)
+        col = shade90gray)
 
   axis(side = 2, at = seq(-6, 26, by = 2), labels = c("-6", "", "-2", "", "2", "", "6", "", "10", "", "14", "", "18", "", "22", "", "26"))
   axis(1, at = c(1, 24, 48, 72), labels = c(15, 16, 17, 18))
@@ -168,7 +177,7 @@ plot(1:10, 1:10, type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "", frame
 legend(x = 0.1, y = 9.8,
        c("Control","Low Shade", "Moderate Shade", "High Shade"),
        lty = c(reflty,1,1,1),
-       col = c("black", lowcol, medcol, highcol),
+       col = c("black", shade30gray, shade60gray, shade90gray),
        lwd = linewidths,
        cex = 2.3,
        ncol = 1,
@@ -178,7 +187,7 @@ legend(x = 0.1, y = 9.8,
 legend(x = 0.1, y = 7.7,
        c("Control","Low HE", "Moderate HE", "High HE"),
        lty = c(reflty,1,1,1),
-       col = c("black", lowcol, medcol, highcol),
+       col = c("black", littlehypogray, medhypogray, highhypogray),
        lwd = linewidths,
        cex = 2.3,
        ncol = 1,
@@ -212,13 +221,13 @@ for(i in 1:4){
         lty = reflty)
   lines(coredata(hypolit[plotdays[i]]),
         lwd = linewidths,
-        col = lowcol)
+        col = littlehypogray)
   lines(coredata(hypomed[plotdays[i]]),
         lwd = linewidths,
-        col = medcol)
+        col = medhypogray)
   lines(coredata(hypohigh[plotdays[i]]),
         lwd = linewidths,
-        col = highcol)
+        col = highhypogray)
 
   axis(side = 2, at = seq(-6, 26, by = 2), labels = c("-6", "", "-2", "", "2", "", "6", "", "10", "", "14", "", "18", "", "22", "", "26"))
   axis(1, at = c(1, 24, 48, 72), labels = c(15, 16, 17, 18))
@@ -268,7 +277,7 @@ for(i in 1:4){
   plot(1:9, c(dailymeans[2:4], NA, dailymeans[1], NA, dailymeans[5:7]),
        cex = meancex,
        pch = "-",
-       col = c(lowcol, medcol, highcol, "white", "black", "white",lowcol, medcol, highcol),
+       col = c(shade30gray, shade60gray, shade90gray, "white", "black", "white",littlehypogray, medhypogray, highhypogray),
        main = "",
        bty = "n",
        xaxt = "n",
@@ -278,21 +287,21 @@ for(i in 1:4){
        ylim = thisplotrange,
        xlim = c(0.5, 9.5))
   segments(x0 = 1, y0 = max(shade30[plotdays[i]]),
-           x1 = 1, y1 = min(shade30[plotdays[i]]), col = lowcol, lwd = rangelwd)
+           x1 = 1, y1 = min(shade30[plotdays[i]]), col = shade30gray, lwd = rangelwd)
   segments(x0 = 2, y0 = max(shade60[plotdays[i]]),
-           x1 = 2, y1 = min(shade60[plotdays[i]]), col = medcol, lwd = rangelwd)
+           x1 = 2, y1 = min(shade60[plotdays[i]]), col = shade60gray, lwd = rangelwd)
   segments(x0 = 3, y0 = max(shade90[plotdays[i]]),
-           x1 = 3, y1 = min(shade90[plotdays[i]]), col = highcol, lwd = rangelwd)
+           x1 = 3, y1 = min(shade90[plotdays[i]]), col = shade90gray, lwd = rangelwd)
 
   segments(x0 = 5, y0 = max(control[plotdays[i]]),
            x1 = 5, y1 = min(control[plotdays[i]]), col = "black", lwd = rangelwd)
 
   segments(x0 = 7, y0 = max(hypolit[plotdays[i]]),
-           x1 = 7, y1 = min(hypolit[plotdays[i]]), col = lowcol, lwd = rangelwd)
+           x1 = 7, y1 = min(hypolit[plotdays[i]]), col = littlehypogray, lwd = rangelwd)
   segments(x0 = 8, y0 = max(hypomed[plotdays[i]]),
-           x1 = 8, y1 = min(hypomed[plotdays[i]]), col = medcol, lwd = rangelwd)
+           x1 = 8, y1 = min(hypomed[plotdays[i]]), col = medhypogray, lwd = rangelwd)
   segments(x0 = 9, y0 = max(hypohigh[plotdays[i]]),
-           x1 = 9, y1 = min(hypohigh[plotdays[i]]), col = highcol, lwd = rangelwd)
+           x1 = 9, y1 = min(hypohigh[plotdays[i]]), col = highhypogray, lwd = rangelwd)
 
   mtext(c("January", "April", "July", "October")[i], side = 3, line = 1, cex = 2, font = 2)
 }
@@ -306,7 +315,7 @@ for(i in 1:4){
        pch = 24,
        cex = phasepntcex,
        col = "black",
-       bg = c(lowcol, medcol, highcol, NA,"black", NA,lowcol, medcol, highcol),
+       bg = c(shade30gray, shade60gray, shade90gray, NA,"black", NA,littlehypogray, medhypogray, highhypogray),
        lwd = phaselwd,
        ylab = "",
        xaxt = "n",
@@ -319,7 +328,7 @@ for(i in 1:4){
          pch = 24,
          cex = phasepntcex,
          col = "black",
-         bg = c(lowcol, medcol, highcol, NA,"black", NA,lowcol, medcol, highcol),
+         bg = c(shade30gray, shade60gray, shade90gray, NA,"black", NA,littlehypogray, medhypogray, highhypogray),
          lwd = phaselwd)
   points(x = 1:9, y = c(mintiming[2:4,i], NA, mintiming[1,i], NA, mintiming[5:7, i]),
          ylim = c(mean(mintiming[,i]) - 3, mean(mintiming[,i]) + 3),
@@ -327,7 +336,7 @@ for(i in 1:4){
          pch = 25,
          cex = phasepntcex,
          col = "black",
-         bg = c(lowcol, medcol, highcol, NA,"black", NA,lowcol, medcol, highcol),
+         bg = c(shade30gray, shade60gray, shade90gray, NA,"black", NA,littlehypogray, medhypogray, highhypogray),
          lwd = phaselwd)
 
 
