@@ -6,24 +6,24 @@ library(devtools)
 #install_github("FluvialLandscapeLab/hydrogeom")
 library(hydrogeom)
 
-<<<<<<< HEAD
-#"d:/Users/sarah.fogg/Desktop/TempToolModelTesting2/"
-fileslocation <- "C:\\Users\\t24x137\\Desktop\\Old Tower Desktop Folders\\TempToolModelTesting2\\"
-setwd(fileslocation)
 
-load("runs_using_2017_umatilla_aquifer_geometry/highHypo870.RData")
-load("runs_using_2017_umatilla_aquifer_geometry/medHypo870.RData")
-load("runs_using_2017_umatilla_aquifer_geometry/littleHypo870.RData")
-=======
+#"d:/Users/sarah.fogg/Desktop/TempToolModelTesting2/"
+#fileslocation <- "C:\\Users\\t24x137\\Desktop\\Old Tower Desktop Folders\\TempToolModelTesting2\\"
+#setwd(fileslocation)
+
+load("runs_using_2017_umatilla_aquifer_geometry/high/highHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/med/medHypo870.RData")
+load("runs_using_2017_umatilla_aquifer_geometry/little/littleHypo870.RData")
+
 # fileslocation <- "C:/Users/t24x137/Desktop/TempTool_2020"
 # setwd(fileslocation)
 
->>>>>>> c6752770c09b3e8c00026e0228a974c53bbd0bcb
+
 load("model_output/noShadeNoHypo.RData")
 load("model_output/shade30.RData")
 load("model_output/shade60.RData")
 load("model_output/shade90.RData")
-<<<<<<< HEAD
+
 
 load("model_output/longwaveNetHighHypo.RData")
 load("model_output/longwaveNetLittleHypo.RData")
@@ -56,7 +56,7 @@ load("model_output/shortwaveNet90.RData")
 load("model_output/shortwaveNet60.RData")
 load("model_output/shortwaveNet30.RData")
 load("model_output/shortwaveNet.RData")
-=======
+
 load("runs_using_2017_umatilla_aquifer_geometry/highHypo870.RData")
 load("runs_using_2017_umatilla_aquifer_geometry/medHypo870.RData")
 load("runs_using_2017_umatilla_aquifer_geometry/littleHypo870.RData")
@@ -93,7 +93,6 @@ load("shortwaveNet90.RData")
 load("shortwaveNet60.RData")
 load("shortwaveNet30.RData")
 load("shortwaveNet.RData")
->>>>>>> c6752770c09b3e8c00026e0228a974c53bbd0bcb
 
 reference <- xts(zoo(noShadeNoHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 control <- xts(zoo(noShadeNoHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
@@ -111,6 +110,15 @@ shade90gray = "gray85"
 littlehypogray = "gray37"
 medhypogray = "gray60"
 highhypogray = "gray85"
+
+shade30gray = hcl.colors(6, "Vik")[6]
+shade60gray = hcl.colors(6, "Vik")[5]
+shade90gray = hcl.colors(6, "Vik")[4]
+
+littlehypogray = hcl.colors(6, "Vik")[1]
+medhypogray = hcl.colors(6, "Vik")[2]
+highhypogray = hcl.colors(6, "Vik")[3]
+
 
 spHeatWater <- 4193
 

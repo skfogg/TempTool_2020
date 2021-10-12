@@ -114,7 +114,7 @@ hypohighannflux <- calc_annual_fluxes(shortwaveHighHypo[year], longwaveHighHypo[
 
 
 ### COLOR SHWIZZ ###
-mycolorpal <- hcl.colors(4, "Plasma")
+mycolorpal <- hcl.colors(4, "Inferno")
 fluxpal <- hcl.colors(5, "Plasma")
 refcol <- mycolorpal[1]
 
@@ -786,16 +786,77 @@ plotscenariofluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, alph
   axis(1, at = xaxisat, labels = xaxislabels)
 }
 
+plotmeanscenariofluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, alphanum, borderlwd, middlelwd, ...){
+  plot.zoo(apply.daily(sw[yrandhalf], mean),
+           col = adjustcolor(fluxcolors[1], alpha.f = alphanum),
+           lwd = middlelwd,
+           xaxt = "n",
+           ylab = "Flux",
+           xlab = "Month",
+           ...)
+
+  lines(as.zoo(apply.daily(lw[yrandhalf], mean)),
+        col = adjustcolor(fluxcolors[2], alpha.f = alphanum),
+        lwd = middlelwd)
+
+  lines(as.zoo(apply.daily(latent[yrandhalf], mean)),
+        col = adjustcolor(fluxcolors[4], alpha.f = alphanum),
+        lwd = middlelwd)
+
+  lines(as.zoo(apply.daily(sens[yrandhalf], mean)),
+        col = adjustcolor(fluxcolors[3], alpha.f = alphanum),
+        lwd = middlelwd)
+
+  if(is.na(hypo) == F){
+    lines(as.zoo(apply.daily(hypo[yrandhalf], mean)),
+          col = "black",
+          lwd = middlelwd+2)
+    lines(as.zoo(apply.daily(hypo[yrandhalf], mean)),
+          col = adjustcolor(fluxcolors[5], alpha.f = alphanum),
+          lwd = middlelwd)
+
+    # abline(h = 0, col = "white", lwd = 3)
+
+    abline(h = 0, lwd = 2, lty = 2)
+
+    # all <- sw + lw + sens + latent + hypo
+    # lines(as.zoo(apply.daily(all, mean)),
+    #       lty = 2,
+    #       lwd = 2)
+  }else{
+
+    # abline(h = 0, col = "white", lwd = 3)
+
+    abline(h = 0, lwd = 2, lty = 2)
+
+    # all <- sw + lw + sens + latent
+    # lines(as.zoo(apply.daily(all, mean)),
+    #       lty = 2,
+    #       lwd = 2)
+  }
+
+  xaxislabels <- c("Jan", "Mar", "May", "Jul", "Sep", "Nov", "Jan", "Mar", "May", "Jul")
+  xaxisat <- c(ymd_hms("2016-01-01 00:00:00"), ymd_hms("2016-03-01 00:00:00"),
+               ymd_hms("2016-05-01 00:00:00"), ymd_hms("2016-07-01 00:00:00"),
+               ymd_hms("2016-09-01 00:00:00"), ymd_hms("2016-11-01 00:00:00"),
+               ymd_hms("2017-01-01 00:00:00"), ymd_hms("2017-03-01 00:00:00"),
+               ymd_hms("2017-05-01 00:00:00"), ymd_hms("2017-07-01 00:00:00"))
+  axis(1, at = xaxisat, labels = xaxislabels)
+}
+
 #### controls ####
 fluxpal <- hcl.colors(5, "Plasma")
-alphaparam <- 0.7
+alphaparam <- 1
+lwdparam <- 5
 
-png("plots/2017_umatilla/perScenarioFluxPlots_v2.png", width = 800*5, height = 1100*5,
+png("plots/2017_umatilla/perScenarioMeanFluxPlots.png", width = 800*5, height = 1100*5,
     res = 72*5)
 par(mfcol = c(4,2),
-    cex.lab = 1.3)
+    cex.lab = 1.5,
+    cex.axis = 1.5,
+    mar = c(2,2,1,1))
 ##### REFERENCE/CONTROL #####
-plotscenariofluxes(sw = shortwaveNetRef,
+plotmeanscenariofluxes(sw = shortwaveNetRef,
                    lw = longwaveNetRef,
                    sens = sensibleRef,
                    latent = latentRef,
@@ -803,10 +864,10 @@ plotscenariofluxes(sw = shortwaveNetRef,
                    alphanum = alphaparam,
                    borderlwd = lwdparam,
                    middlelwd = lwdparam,
-                   ylim = c(-0.35, 0.9))
+                   ylim = c(-0.25, 0.35))
 
 ##### SHADE 30 ####
-plotscenariofluxes(sw = shortwaveNet30,
+plotmeanscenariofluxes(sw = shortwaveNet30,
                    lw = longwaveNet30,
                    sens = sensible30,
                    latent = latent30,
@@ -814,10 +875,10 @@ plotscenariofluxes(sw = shortwaveNet30,
                    alphanum = alphaparam,
                    borderlwd = lwdparam,
                    middlelwd = lwdparam,
-                   ylim = c(-0.35, 0.9))
+                   ylim = c(-0.25, 0.35))
 
 ##### SHADE 60 ####
-plotscenariofluxes(sw = shortwaveNet60,
+plotmeanscenariofluxes(sw = shortwaveNet60,
                    lw = longwaveNet60,
                    sens = sensible60,
                    latent = latent60,
@@ -825,10 +886,10 @@ plotscenariofluxes(sw = shortwaveNet60,
                    alphanum = alphaparam,
                    borderlwd = lwdparam,
                    middlelwd = lwdparam,
-                   ylim = c(-0.35, 0.9))
+                   ylim = c(-0.25, 0.35))
 
 ##### SHADE 90 ####
-plotscenariofluxes(sw = shortwaveNet90,
+plotmeanscenariofluxes(sw = shortwaveNet90,
                    lw = longwaveNet90,
                    sens = sensible90,
                    latent = latent90,
@@ -836,10 +897,10 @@ plotscenariofluxes(sw = shortwaveNet90,
                    alphanum = alphaparam,
                    borderlwd = lwdparam,
                    middlelwd = lwdparam,
-                   ylim = c(-0.35, 0.9))
+                   ylim = c(-0.25, 0.35))
 
 ##### REFERENCE/CONTROL #####
-plotscenariofluxes(sw = shortwaveNetRef,
+plotmeanscenariofluxes(sw = shortwaveNetRef,
                    lw = longwaveNetRef,
                    sens = sensibleRef,
                    latent = latentRef,
@@ -847,10 +908,10 @@ plotscenariofluxes(sw = shortwaveNetRef,
                    alphanum = alphaparam,
                    borderlwd = lwdparam,
                    middlelwd = lwdparam,
-                   ylim = c(-0.35, 0.9))
+                   ylim = c(-0.25, 0.35))
 
 ##### HYPO LOW ####
-plotscenariofluxes(sw = shortwaveLittleHypo,
+plotmeanscenariofluxes(sw = shortwaveLittleHypo,
                    lw = longwaveLittleHypo,
                    sens = sensibleLittleHypo,
                    latent = latentLittleHypo,
@@ -859,11 +920,11 @@ plotscenariofluxes(sw = shortwaveLittleHypo,
                    alphanum = alphaparam,
                    borderlwd = lwdparam,
                    middlelwd = lwdparam,
-                   ylim = c(-0.35, 0.9))
+                   ylim = c(-0.25, 0.35))
 
 
 ##### HYPO MED ####
-plotscenariofluxes(sw = shortwaveMedHypo,
+plotmeanscenariofluxes(sw = shortwaveMedHypo,
                    lw = longwaveMedHypo,
                    sens = sensibleMedHypo,
                    latent = latentMedHypo,
@@ -872,11 +933,11 @@ plotscenariofluxes(sw = shortwaveMedHypo,
                    alphanum = alphaparam,
                    borderlwd = lwdparam,
                    middlelwd = lwdparam,
-                   ylim = c(-0.35, 0.9))
+                   ylim = c(-0.25, 0.35))
 
 
 ##### HYPO HIGH ####
-plotscenariofluxes(sw = shortwaveHighHypo,
+plotmeanscenariofluxes(sw = shortwaveHighHypo,
                    lw = longwaveHighHypo,
                    sens = sensibleHighHypo,
                    latent = latentHighHypo,
@@ -885,7 +946,7 @@ plotscenariofluxes(sw = shortwaveHighHypo,
                    alphanum = alphaparam,
                    borderlwd = lwdparam,
                    middlelwd = lwdparam,
-                   ylim = c(-0.35, 0.9))
+                   ylim = c(-0.25, 0.35))
 dev.off()
 
 
@@ -1342,7 +1403,7 @@ lwrange <- c(-0.4375, 0.4375)
 sensrange <- c(-0.4375, 0.4375)
 latrange <- c(-0.425, 0.4375)
 hyporange <- c(-0.4375, 0.4375)
-netrange <- c(-0.31, 0.59)
+netrange <- c(-0.33, 0.58)
 
 fluxpal <- hcl.colors(5, "Plasma")
 
@@ -1350,22 +1411,143 @@ netref <- "black"
 shadecols <- hcl.colors(6, "Vik", rev = T)[1:3]
 hypocols <- hcl.colors(6, "Vik")[1:3]
 
+refcol <- "grey10"
 
-png("plots/2017_umatilla/annualEnergyFluxes_allQs_equalylimrange_color.png", width = 800*5, height = 1100*5,
+shade30gray <- shadecols[1]
+shade60gray <- shadecols[2]
+shade90gray <- shadecols[3]
+
+littlehypogray <- hypocols[1]
+medhypogray <- hypocols[2]
+highhypogray <- hypocols[3]
+lwdparam <- 3
+
+# refcol <- "black"
+#
+# shade30gray <- shadecols[1]
+# shade60gray <- shadecols[2]
+# shade90gray <- shadecols[3]
+#
+# littlehypogray <- hypocols[1]
+# medhypogray <- hypocols[2]
+# highhypogray <- hypocols[3]
+
+
+png("plots/2017_umatilla/annualEnergyFluxes_allQs_equalylimrange_color_bluebrown.png", width = 800*5, height = 1100*5,
     res = 72*5)
 par(mfcol = c(6,2),
-    mar = c(2,5,1,1),
+    mar = c(2,2,1,1),
     cex.lab = 1.3,
     cex.axis = 1.2,
     oma = c(0,0,0,0))
 
+
+##### SW SHADE SCENARIOS #####
+plot.zoo(shortwaveNetRef[yrandhalf],
+         col = adjustcolor(refcol, alpha.f = 0.6),
+         lwd = lwdparam,
+         ylim = swrange,
+         ylab = expression(paste("Shortwave Radiation, ", Q[s]," (kW  ",m^-2, ")")),
+         xaxt = "n")
+lines(as.zoo(apply.daily(shortwaveNetRef[yrandhalf], max)), lwd = lwdparam, col = refcol)
+
+lines(as.zoo(shortwaveNet30[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveNet30[yrandhalf], max)), lwd = lwdparam, col = shade30gray)
+
+lines(as.zoo(shortwaveNet60[yrandhalf]), col = adjustcolor(shade60gray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveNet60[yrandhalf], max)), lwd = lwdparam, col = shade60gray)
+
+lines(as.zoo(shortwaveNet90[yrandhalf]), col = adjustcolor(shade90gray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveNet90[yrandhalf], max)), lwd = lwdparam, col = shade90gray)
+abline(h= 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+##### LW SHADE SCENARIOS #####
+plot.zoo(longwaveNetRef[yrandhalf], col = adjustcolor(refcol, alpha.f = 0.6),
+         ylim = lwrange, lwd = lwdparam,
+         ylab = expression(paste("Longwave Radiation, ", Q[l]," (kW  ",m^-2, ")")),
+         xaxt = "n")
+lines(as.zoo(apply.daily(longwaveNetRef[yrandhalf], max)), lwd = lwdparam, col = refcol)
+lines(as.zoo(apply.daily(longwaveNetRef[yrandhalf], min)), lwd = lwdparam, col = refcol)
+
+lines(as.zoo(longwaveNet30[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.7), lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveNet30[yrandhalf], max)), lwd = lwdparam, col = shade30gray)
+lines(as.zoo(apply.daily(longwaveNet30[yrandhalf], min)), lwd = lwdparam, col = shade30gray)
+
+lines(as.zoo(longwaveNet60[yrandhalf]), col = adjustcolor(shade60gray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveNet60[yrandhalf], max)), lwd = lwdparam, col = shade60gray)
+lines(as.zoo(apply.daily(longwaveNet60[yrandhalf], min)), lwd = lwdparam, col = shade60gray)
+
+lines(as.zoo(longwaveNet90[yrandhalf]), col = adjustcolor(shade90gray, alpha.f = 0.4), lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveNet90[yrandhalf], max)), lwd = lwdparam, col = shade90gray)
+lines(as.zoo(apply.daily(longwaveNet90[yrandhalf], min)), lwd = lwdparam, col = shade90gray)
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+
+##### SENSIBLE SHADE SCENARIOS #####
+plot.zoo(sensibleRef[yrandhalf], col = adjustcolor(refcol, alpha.f = 0.6),
+         ylim = sensrange, lwd = lwdparam,
+         ylab = expression(paste("Sensible Heat, ", Q[h]," (kW  ",m^-2, ")")),
+         xaxt = "n")
+lines(as.zoo(apply.daily(sensibleRef[yrandhalf], max)), lwd = lwdparam, col = refcol)
+lines(as.zoo(apply.daily(sensibleRef[yrandhalf], min)), lwd = lwdparam, col = refcol)
+
+lines(as.zoo(sensible30[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.7), lwd = lwdparam)
+lines(as.zoo(apply.daily(sensible30[yrandhalf], max)), lwd = lwdparam, col = shade30gray)
+lines(as.zoo(apply.daily(sensible30[yrandhalf], min)), lwd = lwdparam, col = shade30gray)
+
+lines(as.zoo(sensible60[yrandhalf]), col = adjustcolor(shade60gray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(sensible60[yrandhalf], max)), lwd = lwdparam, col = shade60gray)
+lines(as.zoo(apply.daily(sensible60[yrandhalf], min)), lwd = lwdparam, col = shade60gray)
+
+lines(as.zoo(sensible90[yrandhalf]), col = adjustcolor(shade90gray, alpha.f = 0.4), lwd = lwdparam)
+lines(as.zoo(apply.daily(sensible90[yrandhalf], max)), lwd = lwdparam, col = shade90gray)
+lines(as.zoo(apply.daily(sensible90[yrandhalf], min)), lwd = lwdparam, col = shade90gray)
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+##### LATENT SHADE SCENARIOS #####
+plot.zoo(latentRef[yrandhalf], col = adjustcolor(refcol, alpha.f = 0.6),
+         ylim = latrange, lwd = lwdparam,
+         ylab = expression(paste("Latent Heat, ", Q[e]," (kW  ",m^-2, ")")),
+         xaxt = "n")
+lines(as.zoo(apply.daily(latentRef[yrandhalf], max)), lwd = lwdparam, col = refcol)
+lines(as.zoo(apply.daily(latentRef[yrandhalf], min)), lwd = lwdparam, col = refcol)
+
+lines(as.zoo(latent30[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(latent30[yrandhalf], max)), lwd = lwdparam, col = shade30gray)
+lines(as.zoo(apply.daily(latent30[yrandhalf], min)), lwd = lwdparam, col = shade30gray)
+
+lines(as.zoo(latent60[yrandhalf]), col = adjustcolor(shade60gray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(latent60[yrandhalf], max)), lwd = lwdparam, col = shade60gray)
+lines(as.zoo(apply.daily(latent60[yrandhalf], min)), lwd = lwdparam, col = shade60gray)
+
+lines(as.zoo(latent90[yrandhalf]), col = adjustcolor(shade90gray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(latent90[yrandhalf], max)), lwd = lwdparam, col = shade90gray)
+lines(as.zoo(apply.daily(latent90[yrandhalf], min)), lwd = lwdparam, col = shade90gray)
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+##### STREAMBED FLUX: SHADE SCENARIOS #####
+plot.zoo(sensible30[yrandhalf], col = shade30gray, ylim = hyporange,
+         type = "n",
+         xaxt = "n",
+         ylab = expression(paste("Hyporheic Heat Flux, ", Q[b]," (kW  ",m^-2, ")")))
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+
 ##### Net energy flux Q_c #####
 plot.zoo(refall[yrandhalf],
-         col = refcol,
+         col = adjustcolor(refcol, alpha.f = 0.6),
          lwd = lwdparam,
          ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
          xaxt = "n",
          ylim = netrange)
+lines(apply.daily(as.zoo(refall[yrandhalf]), max), col = adjustcolor(shade30gray, alpha.f = 1), lwd = lwdparam)
+lines(apply.daily(as.zoo(refall[yrandhalf]), min), col = adjustcolor(shade30gray, alpha.f = 1), lwd = lwdparam)
+
 lines(as.zoo(shade30all[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.6), lwd = lwdparam)
 lines(apply.daily(as.zoo(shade30all[yrandhalf]), max), col = adjustcolor(shade30gray, alpha.f = 1), lwd = lwdparam)
 lines(apply.daily(as.zoo(shade30all[yrandhalf]), min), col = adjustcolor(shade30gray, alpha.f = 1), lwd = lwdparam)
@@ -1380,78 +1562,311 @@ lines(apply.daily(as.zoo(shade90all[yrandhalf]), min), col = adjustcolor(shade90
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
+##### SW: HYPORHEIC SCENARIOS #####
+plot.zoo(shortwaveNetRef[yrandhalf], col = adjustcolor(refcol, alpha.f = 0.6), lwd = lwdparam, ylim = swrange,
+         ylab =  expression(paste("Shortwave Radiation, ", Q[s]," (kW  ",m^-2, ")")),
+         xaxt = "n")
+lines(as.zoo(apply.daily(shortwaveNetRef[yrandhalf], max)), lwd = lwdparam, col = refcol)
+
+lines(as.zoo(shortwaveLittleHypo[yrandhalf]), col = adjustcolor(littlehypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveLittleHypo[yrandhalf], max)), lwd = lwdparam, col = littlehypogray)
+
+lines(as.zoo(shortwaveMedHypo[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveMedHypo[yrandhalf], max)), lwd = lwdparam, col = medhypogray)
+
+lines(as.zoo(shortwaveHighHypo[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveHighHypo[yrandhalf], max)), lwd = lwdparam, col = highhypogray)
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+##### LW: HYPORHEIC SCENARIOS #####
+plot.zoo(longwaveNetRef[yrandhalf], col = adjustcolor(refcol, alpha.f = 0.6), ylim = lwrange, lwd = lwdparam,
+         ylab = expression(paste("Longwave Radiation, ", Q[l]," (kW  ",m^-2, ")")),
+         xaxt = "n")
+lines(as.zoo(apply.daily(longwaveNetRef[yrandhalf], max)), lwd = lwdparam, col = refcol)
+lines(as.zoo(apply.daily(longwaveNetRef[yrandhalf], min)), lwd = lwdparam, col = refcol)
+
+lines(as.zoo(longwaveLittleHypo[yrandhalf]), col = adjustcolor(littlehypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveLittleHypo[yrandhalf], max)), lwd = lwdparam, col = littlehypogray)
+lines(as.zoo(apply.daily(longwaveLittleHypo[yrandhalf], min)), lwd = lwdparam, col = littlehypogray)
+
+lines(as.zoo(longwaveMedHypo[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveMedHypo[yrandhalf], max)), lwd = lwdparam, col = medhypogray)
+lines(as.zoo(apply.daily(longwaveMedHypo[yrandhalf], min)), lwd = lwdparam, col = medhypogray)
+
+lines(as.zoo(longwaveHighHypo[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveHighHypo[yrandhalf], max)), lwd = lwdparam, col = highhypogray)
+lines(as.zoo(apply.daily(longwaveHighHypo[yrandhalf], min)), lwd = lwdparam, col = highhypogray)
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+##### SENSIBLE: HYPORHEIC SENARIOS #####
+plot.zoo(sensibleRef[yrandhalf], col = adjustcolor(refcol, alpha.f = 0.6), ylim = sensrange, lwd = lwdparam,
+         ylab = expression(paste("Sensible Heat, ", Q[h]," (kW  ",m^-2, ")")),
+         xaxt = "n")
+lines(as.zoo(apply.daily(sensibleRef[yrandhalf], max)), lwd = lwdparam, col = refcol)
+lines(as.zoo(apply.daily(sensibleRef[yrandhalf], min)), lwd = lwdparam, col = refcol)
+
+lines(as.zoo(sensibleLittleHypo[yrandhalf]), col = adjustcolor(littlehypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(sensibleLittleHypo[yrandhalf], max)), lwd = lwdparam, col = littlehypogray)
+lines(as.zoo(apply.daily(sensibleLittleHypo[yrandhalf], min)), lwd = lwdparam, col = littlehypogray)
+
+lines(as.zoo(sensibleMedHypo[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(sensibleMedHypo[yrandhalf], max)), lwd = lwdparam, col = medhypogray)
+lines(as.zoo(apply.daily(sensibleMedHypo[yrandhalf], min)), lwd = lwdparam, col = medhypogray)
+
+lines(as.zoo(sensibleHighHypo[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(sensibleHighHypo[yrandhalf], max)), lwd = lwdparam, col = highhypogray)
+lines(as.zoo(apply.daily(sensibleHighHypo[yrandhalf], min)), lwd = lwdparam, col = highhypogray)
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+##### LATENT: HYPORHEIC SCENARIOS #####
+plot.zoo(latentRef[yrandhalf], col = adjustcolor(refcol, alpha.f = 0.6), ylim = latrange, lwd = lwdparam,
+         ylab = expression(paste("Latent Heat, ", Q[e]," (kW  ",m^-2, ")")),
+         xaxt = "n")
+lines(as.zoo(apply.daily(latentRef[yrandhalf], max)), lwd = lwdparam, col = refcol)
+lines(as.zoo(apply.daily(latentRef[yrandhalf], min)), lwd = lwdparam, col = refcol)
+
+lines(as.zoo(latentLittleHypo[yrandhalf]), col = adjustcolor(littlehypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(latentLittleHypo[yrandhalf], max)), lwd = lwdparam, col = littlehypogray)
+lines(as.zoo(apply.daily(latentLittleHypo[yrandhalf], min)), lwd = lwdparam, col = littlehypogray)
+
+lines(as.zoo(latentMedHypo[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(latentMedHypo[yrandhalf], max)), lwd = lwdparam, col = medhypogray)
+lines(as.zoo(apply.daily(latentMedHypo[yrandhalf], min)), lwd = lwdparam, col = medhypogray)
+
+lines(as.zoo(latentHighHypo[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(latentHighHypo[yrandhalf], max)), lwd = lwdparam, col = highhypogray)
+lines(as.zoo(apply.daily(latentHighHypo[yrandhalf], min)), lwd = lwdparam, col = highhypogray)
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+##### HYPORHEIC: HYPORHEIC SCENARIOS #####
+plot.zoo(hyporheicLittleHypo[yrandhalf], col = adjustcolor(littlehypogray, alpha.f = 0.6), lwd = lwdparam, ylim = hyporange,
+         ylab = expression(paste("Hyporheic Heat Flux, ", Q[b]," (kW  ",m^-2, ")")),
+         xaxt = "n")
+lines(as.zoo(apply.daily(hyporheicLittleHypo[yrandhalf], max)), lwd = lwdparam, col = littlehypogray)
+lines(as.zoo(apply.daily(hyporheicLittleHypo[yrandhalf], min)), lwd = lwdparam, col = littlehypogray)
+
+lines(as.zoo(hyporheicMedHypo[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(hyporheicMedHypo[yrandhalf], max)), lwd = lwdparam, col = medhypogray)
+lines(as.zoo(apply.daily(hyporheicMedHypo[yrandhalf], min)), lwd = lwdparam, col = medhypogray)
+
+lines(as.zoo(hyporheicHighHypo[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(as.zoo(apply.daily(hyporheicHighHypo[yrandhalf], max)), lwd = lwdparam, col = highhypogray)
+lines(as.zoo(apply.daily(hyporheicHighHypo[yrandhalf], min)), lwd = lwdparam, col = highhypogray)
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+##### Net HEat FLux Q_c Hypo #####
+plot.zoo(refall[yrandhalf], col = adjustcolor(refcol, alpha.f = 0.6), lwd = lwdparam,
+         ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
+         xaxt = "n",
+         ylim = netrange)
+lines(apply.daily(as.zoo(refall[yrandhalf]), max), col = adjustcolor(refcol, alpha.f = 1), lwd = lwdparam)
+lines(apply.daily(as.zoo(refall[yrandhalf]), min), col = adjustcolor(refcol, alpha.f = 1), lwd = lwdparam)
+
+lines(as.zoo(hypolittleall[yrandhalf]), col = adjustcolor(littlehypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypolittleall[yrandhalf]), max), col = adjustcolor(littlehypogray, alpha.f = 1), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypolittleall[yrandhalf]), min), col = adjustcolor(littlehypogray, alpha.f = 1), lwd = lwdparam)
+
+lines(as.zoo(hypomedall[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypomedall[yrandhalf]), max), col = adjustcolor(medhypogray, alpha.f = 1), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypomedall[yrandhalf]), min), col = adjustcolor(medhypogray, alpha.f = 1), lwd = lwdparam)
+
+lines(as.zoo(hypohighall[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypohighall[yrandhalf]), max), col = adjustcolor(highhypogray, alpha.f = 1), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypohighall[yrandhalf]), min), col = adjustcolor(highhypogray, alpha.f = 1), lwd = lwdparam)
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
+
+dev.off()
+#####
+
+##############################
+##### All Qs: color, v2 ######
+##############################
+swrange <-  c(0, 0.875)
+lwrange <- c(-0.4375, 0.4375)
+sensrange <- c(-0.4375, 0.4375)
+latrange <- c(-0.425, 0.4375)
+hyporange <- c(-0.4375, 0.4375)
+netrange <- c(-0.33, 0.58)
+
+fluxpal <- hcl.colors(5, "Plasma")
+swcol <- fluxpal[1]
+lwcol <- fluxpal[2]
+senscol <- fluxpal[3]
+latcol <- fluxpal[4]
+hypocol <- fluxpal[5]
+
+alpha_adjusts <- c(0.8, 0.6, 0.4)
+alpha_adjusts2 <- c(1,1,1)
+
+swlo <- adjustcolor(lighten(swcol, amount = 0.2), alpha.f = 0.6)
+swmed <- adjustcolor(lighten(swcol, amount = 0.4), alpha.f = 0.6)
+swhi <- adjustcolor(lighten(swcol, amount = 0.6), alpha.f = 0.6)
+
+lwlo <- adjustcolor(lighten(lwcol, amount = 0.3), alpha.f = 0.6)
+lwmed <- adjustcolor(lighten(lwcol, amount = 0.6), alpha.f = 0.6)
+lwhi <- adjustcolor(lighten(lwcol, amount = 0.85), alpha.f = 0.6)
+
+senslo <- adjustcolor(lighten(senscol, amount = 0.3), alpha.f = 0.6)
+sensmed <- adjustcolor(lighten(senscol, amount = 0.6), alpha.f = 0.6)
+senshi <- adjustcolor(lighten(senscol, amount = 0.85), alpha.f = 0.6)
+
+latlo <- adjustcolor(lighten(latcol, amount = 0.3), alpha.f = 0.6)
+latmed <- adjustcolor(lighten(latcol, amount = 0.6), alpha.f = 0.6)
+lathi <- adjustcolor(lighten(latcol, amount = 0.85), alpha.f = 0.6)
+
+hypolo <- adjustcolor(lighten(hypocol, amount = 0.3), alpha.f = 0.6)
+hypomed <- adjustcolor(lighten(hypocol, amount = 0.6), alpha.f = 0.6)
+hypohi <- adjustcolor(lighten(hypocol, amount = 0.85), alpha.f = 0.6)
+
+netref <- "black"
+shadecols <- hcl.colors(6, "Vik", rev = T)[1:3]
+hypocols <- hcl.colors(6, "Vik")[1:3]
+
+
+png("plots/2017_umatilla/annualEnergyFluxes_allQs_equalylimrange_color_v2.png", width = 800*5, height = 1100*5,
+    res = 72*5)
+par(mfcol = c(6,2),
+    mar = c(2,5,1,1),
+    cex.lab = 1.3,
+    cex.axis = 1.2,
+    oma = c(0,0,0,0))
+
+##### Net energy flux Q_c #####
+plot.zoo(refall[yrandhalf],
+         col = netref,
+         lwd = lwdparam,
+         ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
+         xaxt = "n",
+         ylim = netrange)
+lines(as.zoo(shade30all[yrandhalf]),
+      col = adjustcolor(shadecols[1], alpha.f = 0.6),
+      lwd = lwdparam)
+lines(apply.daily(as.zoo(shade30all[yrandhalf]), max),
+      col = adjustcolor(shadecols[1], alpha.f = 1),
+      lwd = lwdparam)
+lines(apply.daily(as.zoo(shade30all[yrandhalf]), min),
+      col = adjustcolor(shadecols[1], alpha.f = 1),
+      lwd = lwdparam)
+
+lines(as.zoo(shade60all[yrandhalf]),
+      col = adjustcolor(shadecols[2], alpha.f = 0.6),
+      lwd = lwdparam)
+lines(apply.daily(as.zoo(shade60all[yrandhalf]), max),
+      col = adjustcolor(shadecols[2], alpha.f = 1),
+      lwd = lwdparam)
+lines(apply.daily(as.zoo(shade60all[yrandhalf]), min),
+      col = adjustcolor(shadecols[2], alpha.f = 1),
+      lwd = lwdparam)
+
+lines(as.zoo(shade90all[yrandhalf]),
+      col = adjustcolor(shadecols[3], alpha.f = 0.6),
+      lwd = lwdparam)
+lines(apply.daily(as.zoo(shade90all[yrandhalf]), max),
+      col = adjustcolor(shadecols[3], alpha.f = 1),
+      lwd = lwdparam)
+lines(apply.daily(as.zoo(shade90all[yrandhalf]), min),
+      col = adjustcolor(shadecols[3], alpha.f = 1),
+      lwd = lwdparam)
+abline(h = 0, lty = 2)
+axis(1, at = xaxisat, labels = xaxislabels)
+
 ##### SW SHADE SCENARIOS #####
 plot.zoo(shortwaveNetRef[yrandhalf],
-         col = refcol,
+         col = swcol,
          lwd = lwdparam,
          ylim = swrange,
          ylab = expression(paste("Shortwave Radiation, ", Q[s]," (kW  ",m^-2, ")")),
          xaxt = "n")
-lines(as.zoo(shortwaveNet30[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(shortwaveNet30[yrandhalf], max)), lwd = 2, col = shade30gray)
+lines(as.zoo(shortwaveNet30[yrandhalf]),
+      col = swlo,
+      lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveNet30[yrandhalf], max)),
+      lwd = 2,
+      col = adjustcolor(swlo, alpha.f = alpha_adjusts2[1]))
 
-lines(as.zoo(shortwaveNet60[yrandhalf]), col = adjustcolor(shade60gray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(shortwaveNet60[yrandhalf], max)), lwd = 2, col = shade60gray)
+lines(as.zoo(shortwaveNet60[yrandhalf]),
+      col = swmed,
+      lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveNet60[yrandhalf], max)),
+      lwd = 2,
+      col =adjustcolor(swmed, alpha.f = alpha_adjusts2[2]))
 
-lines(as.zoo(shortwaveNet90[yrandhalf]), col = adjustcolor(shade90gray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(shortwaveNet90[yrandhalf], max)), lwd = 2, col = shade90gray)
+lines(as.zoo(shortwaveNet90[yrandhalf]),
+      col = swhi, lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveNet90[yrandhalf], max)), lwd = 2,
+      col = adjustcolor(swhi, alpha.f = alpha_adjusts[3]))
 abline(h= 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
 ##### LW SHADE SCENARIOS #####
-plot.zoo(longwaveNetRef[yrandhalf], col = refcol, ylim = lwrange, lwd = lwdparam,
+plot.zoo(longwaveNetRef[yrandhalf], col = lwcol, ylim = lwrange, lwd = lwdparam,
          ylab = expression(paste("Longwave Radiation, ", Q[l]," (kW  ",m^-2, ")")),
          xaxt = "n")
-lines(as.zoo(longwaveNet30[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.7), lwd = lwdparam)
-lines(as.zoo(apply.daily(longwaveNet30[yrandhalf], max)), lwd = 2, col = shade30gray)
-lines(as.zoo(apply.daily(longwaveNet30[yrandhalf], min)), lwd = 2, col = shade30gray)
+lines(as.zoo(longwaveNet30[yrandhalf]),
+      col = lwlo, lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveNet30[yrandhalf], max)), lwd = 2,
+       col = adjustcolor(lwlo, alpha.f = alpha_adjusts2[1]))
+lines(as.zoo(apply.daily(longwaveNet30[yrandhalf], min)), lwd = 2,
+      col = adjustcolor(lwlo, alpha.f = alpha_adjusts2[1]))
 
-lines(as.zoo(longwaveNet60[yrandhalf]), col = adjustcolor(shade60gray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(longwaveNet60[yrandhalf], max)), lwd = 2, col = shade60gray)
-lines(as.zoo(apply.daily(longwaveNet60[yrandhalf], min)), lwd = 2, col = shade60gray)
+lines(as.zoo(longwaveNet60[yrandhalf]),
+      col = lwmed, lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveNet60[yrandhalf], max)), lwd = 2,
+      col = adjustcolor(lwmed, alpha.f = alpha_adjusts2[2]))
+lines(as.zoo(apply.daily(longwaveNet60[yrandhalf], min)), lwd = 2,
+      col = adjustcolor(lwmed, alpha.f = alpha_adjusts[2]))
 
-lines(as.zoo(longwaveNet90[yrandhalf]), col = adjustcolor(shade90gray, alpha.f = 0.4), lwd = lwdparam)
-lines(as.zoo(apply.daily(longwaveNet90[yrandhalf], max)), lwd = 2, col = shade90gray)
-lines(as.zoo(apply.daily(longwaveNet90[yrandhalf], min)), lwd = 2, col = shade90gray)
+lines(as.zoo(longwaveNet90[yrandhalf]),
+      col = lwhi, lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveNet90[yrandhalf], max)), lwd = 2,
+      col = adjustcolor(lwhi, alpha.f = alpha_adjusts2[3]))
+lines(as.zoo(apply.daily(longwaveNet90[yrandhalf], min)), lwd = 2,
+      col = adjustcolor(lwhi, alpha.f = alpha_adjusts2[3]))
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
 
 ##### SENSIBLE SHADE SCENARIOS #####
-plot.zoo(sensibleRef[yrandhalf], col = refcol, ylim = sensrange, lwd = lwdparam,
+plot.zoo(sensibleRef[yrandhalf], col = senscol, ylim = sensrange, lwd = lwdparam,
          ylab = expression(paste("Sensible Heat, ", Q[h]," (kW  ",m^-2, ")")),
          xaxt = "n")
-lines(as.zoo(apply.daily(sensibleRef[yrandhalf], max)), lwd = 2, col = refcol)
 
-lines(as.zoo(sensible30[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.7), lwd = lwdparam)
-lines(as.zoo(apply.daily(sensible30[yrandhalf], max)), lwd = 2, col = shade30gray)
-lines(as.zoo(apply.daily(sensible30[yrandhalf], min)), lwd = 2, col = shade30gray)
+lines(as.zoo(sensible30[yrandhalf]), col = senslo, lwd = lwdparam)
+lines(as.zoo(apply.daily(sensible30[yrandhalf], max)), lwd = 2, col = adjustcolor(senslo, alpha.f = alpha_adjusts2[1]))
+lines(as.zoo(apply.daily(sensible30[yrandhalf], min)), lwd = 2, col = adjustcolor(senslo, alpha.f = alpha_adjusts2[1]))
 
-lines(as.zoo(sensible60[yrandhalf]), col = adjustcolor(shade60gray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(sensible60[yrandhalf], max)), lwd = 2, col = shade60gray)
-lines(as.zoo(apply.daily(sensible60[yrandhalf], min)), lwd = 2, col = shade60gray)
+lines(as.zoo(sensible60[yrandhalf]), col = sensmed, lwd = lwdparam)
+lines(as.zoo(apply.daily(sensible60[yrandhalf], max)), lwd = 2, col = adjustcolor(sensmed, alpha.f = alpha_adjusts2[2]))
+lines(as.zoo(apply.daily(sensible60[yrandhalf], min)), lwd = 2, col = adjustcolor(sensmed, alpha.f = alpha_adjusts2[2]))
 
-lines(as.zoo(sensible90[yrandhalf]), col = adjustcolor(shade90gray, alpha.f = 0.4), lwd = lwdparam)
-lines(as.zoo(apply.daily(sensible90[yrandhalf], max)), lwd = 2, col = shade90gray)
-lines(as.zoo(apply.daily(sensible90[yrandhalf], min)), lwd = 2, col = shade90gray)
+lines(as.zoo(sensible90[yrandhalf]), col = senshi, lwd = lwdparam)
+lines(as.zoo(apply.daily(sensible90[yrandhalf], max)), lwd = 2, col = adjustcolor(senshi, alpha.f = alpha_adjusts2[3]))
+lines(as.zoo(apply.daily(sensible90[yrandhalf], min)), lwd = 2, col = adjustcolor(senshi, alpha.f = alpha_adjusts2[3]))
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
 ##### LATENT SHADE SCENARIOS #####
-plot.zoo(latentRef[yrandhalf], col = refcol, ylim = latrange, lwd = lwdparam,
+plot.zoo(latentRef[yrandhalf], col = latcol, ylim = latrange, lwd = lwdparam,
          ylab = expression(paste("Latent Heat, ", Q[e]," (kW  ",m^-2, ")")),
          xaxt = "n")
-lines(as.zoo(latent30[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(latent30[yrandhalf], max)), lwd = 2, col = shade30gray)
-lines(as.zoo(apply.daily(latent30[yrandhalf], min)), lwd = 2, col = shade30gray)
+lines(as.zoo(latent30[yrandhalf]), col = latlo, lwd = lwdparam)
+lines(as.zoo(apply.daily(latent30[yrandhalf], max)), lwd = 2, col = adjustcolor(latlo, alpha.f = alpha_adjusts2[1]))
+lines(as.zoo(apply.daily(latent30[yrandhalf], min)), lwd = 2, col = adjustcolor(latlo, alpha.f = alpha_adjusts2[1]))
 
-lines(as.zoo(latent60[yrandhalf]), col = adjustcolor(shade60gray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(latent60[yrandhalf], max)), lwd = 2, col = shade60gray)
-lines(as.zoo(apply.daily(latent60[yrandhalf], min)), lwd = 2, col = shade60gray)
+lines(as.zoo(latent60[yrandhalf]), col = latmed, lwd = lwdparam)
+lines(as.zoo(apply.daily(latent60[yrandhalf], max)), lwd = 2, col = adjustcolor(latmed, alpha.f = alpha_adjusts2[2]))
+lines(as.zoo(apply.daily(latent60[yrandhalf], min)), lwd = 2, col = adjustcolor(latmed, alpha.f = alpha_adjusts2[2]))
 
-lines(as.zoo(latent90[yrandhalf]), col = adjustcolor(shade90gray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(latent90[yrandhalf], max)), lwd = 2, col = shade90gray)
-lines(as.zoo(apply.daily(latent90[yrandhalf], min)), lwd = 2, col = shade90gray)
+lines(as.zoo(latent90[yrandhalf]), col = lathi, lwd = lwdparam)
+lines(as.zoo(apply.daily(latent90[yrandhalf], max)), lwd = 2, col = adjustcolor(lathi, alpha.f = alpha_adjusts2[3]))
+lines(as.zoo(apply.daily(latent90[yrandhalf], min)), lwd = 2, col = adjustcolor(lathi, alpha.f = alpha_adjusts2[3]))
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
@@ -1465,109 +1880,109 @@ axis(1, at = xaxisat, labels = xaxislabels)
 
 
 ##### Net HEat FLux Q_c Hypo #####
-plot.zoo(refall[yrandhalf], col = refcol, lwd = lwdparam,
+plot.zoo(refall[yrandhalf], col = netref, lwd = lwdparam,
          ylab = expression(paste("Net Heat Flux, ", Q[c]," (kW  ",m^-2, ")")),
          xaxt = "n",
          ylim = netrange)
-lines(as.zoo(hypolittleall[yrandhalf]), col = adjustcolor(shade30gray, alpha.f = 0.6), lwd = lwdparam)
-lines(apply.daily(as.zoo(hypolittleall[yrandhalf]), max), col = adjustcolor(littlehypogray, alpha.f = 1), lwd = lwdparam)
-lines(apply.daily(as.zoo(hypolittleall[yrandhalf]), min), col = adjustcolor(littlehypogray, alpha.f = 1), lwd = lwdparam)
+lines(as.zoo(hypolittleall[yrandhalf]), col = adjustcolor(hypocols[1], alpha.f = 0.6), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypolittleall[yrandhalf]), max), col = adjustcolor(hypocols[1], alpha.f = 1), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypolittleall[yrandhalf]), min), col = adjustcolor(hypocols[1], alpha.f = 1), lwd = lwdparam)
 
-lines(as.zoo(hypomedall[yrandhalf]), col = adjustcolor(shade60gray, alpha.f = 0.6), lwd = lwdparam)
-lines(apply.daily(as.zoo(hypomedall[yrandhalf]), max), col = adjustcolor(medhypogray, alpha.f = 1), lwd = lwdparam)
-lines(apply.daily(as.zoo(hypomedall[yrandhalf]), min), col = adjustcolor(medhypogray, alpha.f = 1), lwd = lwdparam)
+lines(as.zoo(hypomedall[yrandhalf]), col = adjustcolor(hypocols[2], alpha.f = 0.6), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypomedall[yrandhalf]), max), col = adjustcolor(hypocols[2], alpha.f = 1), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypomedall[yrandhalf]), min), col = adjustcolor(hypocols[2], alpha.f = 1), lwd = lwdparam)
 
-lines(as.zoo(hypohighall[yrandhalf]), col = adjustcolor(shade90gray, alpha.f = 0.6), lwd = lwdparam)
-lines(apply.daily(as.zoo(hypohighall[yrandhalf]), max), col = adjustcolor(highhypogray, alpha.f = 1), lwd = lwdparam)
-lines(apply.daily(as.zoo(hypohighall[yrandhalf]), min), col = adjustcolor(highhypogray, alpha.f = 1), lwd = lwdparam)
+lines(as.zoo(hypohighall[yrandhalf]), col = adjustcolor(hypocols[3], alpha.f = 0.6), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypohighall[yrandhalf]), max), col = adjustcolor(hypocols[3], alpha.f = 1), lwd = lwdparam)
+lines(apply.daily(as.zoo(hypohighall[yrandhalf]), min), col = adjustcolor(hypocols[3], alpha.f = 1), lwd = lwdparam)
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
 
 ##### SW: HYPORHEIC SCENARIOS #####
-plot.zoo(shortwaveNetRef[yrandhalf], col = refcol, lwd = lwdparam, ylim = swrange,
+plot.zoo(shortwaveNetRef[yrandhalf], col = swcol, lwd = lwdparam, ylim = swrange,
          ylab =  expression(paste("Shortwave Radiation, ", Q[s]," (kW  ",m^-2, ")")),
          xaxt = "n")
-lines(as.zoo(shortwaveLittleHypo[yrandhalf]), col = adjustcolor(littlehypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(shortwaveLittleHypo[yrandhalf], max)), lwd = 2, col = littlehypogray)
+lines(as.zoo(shortwaveLittleHypo[yrandhalf]), col = swlo, lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveLittleHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(swlo, alpha.f = alpha_adjusts2[1]))
 
-lines(as.zoo(shortwaveMedHypo[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(shortwaveMedHypo[yrandhalf], max)), lwd = 2, col = medhypogray)
+lines(as.zoo(shortwaveMedHypo[yrandhalf]), col = swmed, lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveMedHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(swmed, alpha.f =alpha_adjusts2[2]))
 
-lines(as.zoo(shortwaveHighHypo[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(shortwaveHighHypo[yrandhalf], max)), lwd = 2, col = highhypogray)
+lines(as.zoo(shortwaveHighHypo[yrandhalf]), col = swhi, lwd = lwdparam)
+lines(as.zoo(apply.daily(shortwaveHighHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(swhi, alpha.f = alpha_adjusts2[3]))
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
 ##### LW: HYPORHEIC SCENARIOS #####
-plot.zoo(longwaveNetRef[yrandhalf], col = refcol, ylim = lwrange, lwd = lwdparam,
+plot.zoo(longwaveNetRef[yrandhalf], col = lwcol, ylim = lwrange, lwd = lwdparam,
          ylab = expression(paste("Longwave Radiation, ", Q[l]," (kW  ",m^-2, ")")),
          xaxt = "n")
-lines(as.zoo(longwaveLittleHypo[yrandhalf]), col = adjustcolor(littlehypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(longwaveLittleHypo[yrandhalf], max)), lwd = 2, col = littlehypogray)
-lines(as.zoo(apply.daily(longwaveLittleHypo[yrandhalf], min)), lwd = 2, col = littlehypogray)
+lines(as.zoo(longwaveLittleHypo[yrandhalf]), col = lwlo, lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveLittleHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(lwlo, alpha.f = alpha_adjusts2[1]))
+lines(as.zoo(apply.daily(longwaveLittleHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(lwlo, alpha.f = alpha_adjusts2[1]))
 
-lines(as.zoo(longwaveMedHypo[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(longwaveMedHypo[yrandhalf], max)), lwd = 2, col = medhypogray)
-lines(as.zoo(apply.daily(longwaveMedHypo[yrandhalf], min)), lwd = 2, col = medhypogray)
+lines(as.zoo(longwaveMedHypo[yrandhalf]), col = lwmed, lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveMedHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(lwmed, alpha.f = alpha_adjusts2[2]))
+lines(as.zoo(apply.daily(longwaveMedHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(lwmed, alpha.f = alpha_adjusts2[2]))
 
-lines(as.zoo(longwaveHighHypo[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(longwaveHighHypo[yrandhalf], max)), lwd = 2, col = highhypogray)
-lines(as.zoo(apply.daily(longwaveHighHypo[yrandhalf], min)), lwd = 2, col = highhypogray)
+lines(as.zoo(longwaveHighHypo[yrandhalf]), col = lwhi, lwd = lwdparam)
+lines(as.zoo(apply.daily(longwaveHighHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(lwhi, alpha.f = alpha_adjusts2[3]))
+lines(as.zoo(apply.daily(longwaveHighHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(lwhi, alpha.f = alpha_adjusts2[3]))
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
 ##### SENSIBLE: HYPORHEIC SENARIOS #####
-plot.zoo(sensibleRef[yrandhalf], col = refcol, ylim = sensrange, lwd = lwdparam,
+plot.zoo(sensibleRef[yrandhalf], col = senscol, ylim = sensrange, lwd = lwdparam,
          ylab = expression(paste("Sensible Heat, ", Q[h]," (kW  ",m^-2, ")")),
          xaxt = "n")
-lines(as.zoo(sensibleLittleHypo[yrandhalf]), col = adjustcolor(littlehypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(sensibleLittleHypo[yrandhalf], max)), lwd = 2, col = littlehypogray)
-lines(as.zoo(apply.daily(sensibleLittleHypo[yrandhalf], min)), lwd = 2, col = littlehypogray)
 
-lines(as.zoo(sensibleMedHypo[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(sensibleMedHypo[yrandhalf], max)), lwd = 2, col = medhypogray)
-lines(as.zoo(apply.daily(sensibleMedHypo[yrandhalf], min)), lwd = 2, col = medhypogray)
+lines(as.zoo(sensibleLittleHypo[yrandhalf]), col = senslo, lwd = lwdparam)
+lines(as.zoo(apply.daily(sensibleLittleHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(senslo, alpha.f = alpha_adjusts2[1]))
+lines(as.zoo(apply.daily(sensibleLittleHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(senslo, alpha.f = alpha_adjusts2[1]))
 
-lines(as.zoo(sensibleHighHypo[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(sensibleHighHypo[yrandhalf], max)), lwd = 2, col = highhypogray)
-lines(as.zoo(apply.daily(sensibleHighHypo[yrandhalf], min)), lwd = 2, col = highhypogray)
+lines(as.zoo(sensibleMedHypo[yrandhalf]), col = sensmed, lwd = lwdparam)
+lines(as.zoo(apply.daily(sensibleMedHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(sensmed, alpha.f = alpha_adjusts2[2]))
+lines(as.zoo(apply.daily(sensibleMedHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(sensmed, alpha.f = alpha_adjusts2[2]))
+
+lines(as.zoo(sensibleHighHypo[yrandhalf]), col = senshi, lwd = lwdparam)
+lines(as.zoo(apply.daily(sensibleHighHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(senshi, alpha.f = alpha_adjusts2[3]))
+lines(as.zoo(apply.daily(sensibleHighHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(senshi, alpha.f = alpha_adjusts2[3]))
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
 ##### LATENT: HYPORHEIC SCENARIOS #####
-plot.zoo(latentRef[yrandhalf], col = refcol, ylim = latrange, lwd = lwdparam,
+plot.zoo(latentRef[yrandhalf], col = latcol, ylim = latrange, lwd = lwdparam,
          ylab = expression(paste("Latent Heat, ", Q[e]," (kW  ",m^-2, ")")),
          xaxt = "n")
+lines(as.zoo(latentLittleHypo[yrandhalf]), col = latlo, lwd = lwdparam)
+lines(as.zoo(apply.daily(latentLittleHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(latlo, alpha.f = alpha_adjusts2[1]))
+lines(as.zoo(apply.daily(latentLittleHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(latlo, alpha.f = alpha_adjusts2[1]))
 
-lines(as.zoo(latentLittleHypo[yrandhalf]), col = adjustcolor(littlehypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(latentLittleHypo[yrandhalf], max)), lwd = 2, col = littlehypogray)
-lines(as.zoo(apply.daily(latentLittleHypo[yrandhalf], min)), lwd = 2, col = littlehypogray)
+lines(as.zoo(latentMedMypo[yrandhalf]), col = latmed, lwd = lwdparam)
+lines(as.zoo(apply.daily(latentMedHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(latmed, alpha.f = alpha_adjusts2[2]))
+lines(as.zoo(apply.daily(latentMedHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(latmed, alpha.f = alpha_adjusts2[2]))
 
-lines(as.zoo(latentMedHypo[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(latentMedHypo[yrandhalf], max)), lwd = 2, col = medhypogray)
-lines(as.zoo(apply.daily(latentMedHypo[yrandhalf], min)), lwd = 2, col = medhypogray)
-
-lines(as.zoo(latentHighHypo[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(latentHighHypo[yrandhalf], max)), lwd = 2, col = highhypogray)
-lines(as.zoo(apply.daily(latentHighHypo[yrandhalf], min)), lwd = 2, col = highhypogray)
+lines(as.zoo(latentHighHypo[yrandhalf]), col = lathi, lwd = lwdparam)
+lines(as.zoo(apply.daily(latentHighHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(lathi, alpha.f = alpha_adjusts2[3]))
+lines(as.zoo(apply.daily(latentHighHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(lathi, alpha.f = alpha_adjusts2[3]))
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 
 ##### HYPORHEIC: HYPORHEIC SCENARIOS #####
-plot.zoo(hyporheicLittleHypo[yrandhalf], col = littlehypogray, lwd = lwdparam, ylim = hyporange,
+plot.zoo(hyporheicLittleHypo[yrandhalf], col = hypolo, lwd = lwdparam, ylim = hyporange,
          ylab = expression(paste("Hyporheic Heat Flux, ", Q[b]," (kW  ",m^-2, ")")),
          xaxt = "n")
-lines(as.zoo(apply.daily(hyporheicLittleHypo[yrandhalf], max)), lwd = 2, col = littlehypogray)
-lines(as.zoo(apply.daily(hyporheicLittleHypo[yrandhalf], min)), lwd = 2, col = littlehypogray)
+lines(as.zoo(apply.daily(hyporheicLittleHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(hypolo, alpha.f = alpha_adjusts2[1]))
+lines(as.zoo(apply.daily(hyporheicLittleHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(hypolo, alpha.f = alpha_adjusts2[1]))
 
-lines(as.zoo(hyporheicMedHypo[yrandhalf]), col = adjustcolor(medhypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(hyporheicMedHypo[yrandhalf], max)), lwd = 2, col = medhypogray)
-lines(as.zoo(apply.daily(hyporheicMedHypo[yrandhalf], min)), lwd = 2, col = medhypogray)
+lines(as.zoo(hyporheicMedHypo[yrandhalf]), col = hypomed, lwd = lwdparam)
+lines(as.zoo(apply.daily(hyporheicMedHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(hypomed, alpha.f = alpha_adjusts2[2]))
+lines(as.zoo(apply.daily(hyporheicMedHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(hypomed, alpha.f = alpha_adjusts2[2]))
 
-lines(as.zoo(hyporheicHighHypo[yrandhalf]), col = adjustcolor(highhypogray, alpha.f = 0.6), lwd = lwdparam)
-lines(as.zoo(apply.daily(hyporheicHighHypo[yrandhalf], max)), lwd = 2, col = highhypogray)
-lines(as.zoo(apply.daily(hyporheicHighHypo[yrandhalf], min)), lwd = 2, col = highhypogray)
+lines(as.zoo(hyporheicHighHypo[yrandhalf]), col = hypohi, lwd = lwdparam)
+lines(as.zoo(apply.daily(hyporheicHighHypo[yrandhalf], max)), lwd = 2, col = adjustcolor(hypohi, alpha.f = alpha_adjusts2[3]))
+lines(as.zoo(apply.daily(hyporheicHighHypo[yrandhalf], min)), lwd = 2, col = adjustcolor(hypohi, alpha.f = alpha_adjusts2[3]))
 abline(h = 0, lty = 2)
 axis(1, at = xaxisat, labels = xaxislabels)
 dev.off()
