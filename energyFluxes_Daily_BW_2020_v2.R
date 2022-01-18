@@ -632,23 +632,26 @@ dev.off()
 
 ############################################################
 ##### ANNUAL GAIN/LOSS BUDGET BAR CHART as same budget #####
-png("plots/2017_umatilla/lossANDgain_budget_v2.png", width = 800*5, height = 700*5,
+png("plots/2017_umatilla/lossANDgain_budget_v4.png", width = 800*5, height = 700*5,
     res = 72*5)
 par(mfrow = c(1,2),
-    mar = c(3,3,1,1))
-barplot(matrix(c(shade90budget3[2,],
-                 shade60budget3[2,],
-                 shade30budget3[2,],
-                 refbudget3[2,],
-                 hypolittlebudget3[2,],
-                 hypomedbudget3[2,],
-                 hypohighbudget3[2,]), nrow = 5, ncol = 7),
+    mar = c(3,3,1,1),
+    cex.axis = 1.4)
+barplot(matrix(c(shade90budget3[2,]*-1,
+                 shade60budget3[2,]*-1,
+                 shade30budget3[2,]*-1,
+                 refbudget3[2,]*-1,
+                 hypolittlebudget3[2,]*-1,
+                 hypomedbudget3[2,]*-1,
+                 hypohighbudget3[2,]*-1), nrow = 5, ncol = 7),
         beside = F,
-        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        #names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
         horiz = T,
         col = colmatrix$adjusted,
-        main = "Loss",
-        xlim = c(0,0.7))
+        #main = "Loss",
+        xlim = c(-0.7,0),
+        xaxt = "n")
+axis(1, at = c(seq(-0.7, 0, by = 0.1)), labels = c(seq(0.7, 0.0, by = -0.1)[1:6], "0.1","0.0"))
 
 barplot(matrix(c(shade90budget3[1,],
                  shade60budget3[1,],
@@ -658,19 +661,20 @@ barplot(matrix(c(shade90budget3[1,],
                  hypomedbudget3[1,],
                  hypohighbudget3[1,]), nrow = 5, ncol = 7),
         beside = F,
-        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        #names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
         horiz = T,
         col = colmatrix$adjusted,
-        main = "Gain",
+        #main = "Gain",
         xlim = c(0,0.7))
 dev.off()
 
 ###########################################
 ##### ANNUAL GAIN/LOSS FLUX BAR CHART #####
-png("plots/2017_umatilla/annualFluxLoss_annualFluxGain.png", width = 800*5, height = 700*5,
+png("plots/2017_umatilla/annualFluxLoss_annualFluxGain_v2.png", width = 800*5, height = 700*5,
     res = 72*5)
 par(mfrow = c(1,2),
-    mar = c(3,3,1,1))
+    mar = c(3,3,1,1),
+    cex.axis = 1.4)
 barplot(matrix(c(shade90annflux[2,],
                  shade60annflux[2,],
                  shade30annflux[2,],
@@ -679,10 +683,10 @@ barplot(matrix(c(shade90annflux[2,],
                  hypomedannflux[2,],
                  hypohighannflux[2,]), nrow = 5, ncol = 7),
         beside = F,
-        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        #names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
         horiz = T,
         col = colmatrix$adjusted,
-        main = "Loss",
+        #main = "Loss",
         xlim = c(-2800,0))
 barplot(matrix(c(shade90annflux[1,],
                  shade60annflux[1,],
@@ -692,10 +696,10 @@ barplot(matrix(c(shade90annflux[1,],
                  hypomedannflux[1,],
                  hypohighannflux[1,]), nrow = 5, ncol = 7),
         beside = F,
-        names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
+        #names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
         horiz = T,
         col = colmatrix$adjusted,
-        main = "Gain",
+        #main = "Gain",
         xlim = c(0,2800))
 dev.off()
 #####
