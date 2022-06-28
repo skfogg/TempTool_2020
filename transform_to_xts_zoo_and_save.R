@@ -51,9 +51,9 @@ load("model_output/shortwaveNet30.RData")
 load("model_output/shortwaveNet.RData")
 
 ### HYPORHEIC FLUX ###
-load("runs_using_2017_umatilla_aquifer_geometry/high/Q_b_high.RData")
-load("runs_using_2017_umatilla_aquifer_geometry/med/Q_b_med.RData")
-load("runs_using_2017_umatilla_aquifer_geometry/little/Q_b_little.RData")
+qhz_high <- readRDS("runs_using_2017_umatilla_aquifer_geometry/high/qhz_high.RData")
+qhz_med <- readRDS("runs_using_2017_umatilla_aquifer_geometry/med/qhz_med.RData")
+qhz_little <- readRDS("runs_using_2017_umatilla_aquifer_geometry/little/qhz_little.RData")
 
 
 ### CHANNEL TEMEPRATURE TO XTS/ZOO OBJECTS ###
@@ -76,21 +76,21 @@ shortwaveLittleHypo <- xts(zoo(shortwaveLittleHypo$svValue, order.by = seq(mdy_h
 longwaveLittleHypo <- xts(zoo(longwaveLittleHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 latentLittleHypo <- xts(zoo(latentLittleHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 sensibleLittleHypo <- xts(zoo(sensibleLittleHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
-hyporheicLittleHypo <- xts(zoo(Q_b_little, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
+hyporheicLittleHypo <- xts(zoo(qhz_little, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 
 ### CONVERT MED HYPO DATA TO XTS/ZOO ###
 shortwaveMedHypo <- xts(zoo(shortwaveMedHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 longwaveMedHypo <- xts(zoo(longwaveMedHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 latentMedHypo <- xts(zoo(latentMedHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 sensibleMedHypo <- xts(zoo(sensibleMedHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
-hyporheicMedHypo <- xts(zoo(Q_b_med, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
+hyporheicMedHypo <- xts(zoo(qhz_med, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 
 ### CONVERT HIGH HYPO DATA TO XTS/ZOO ###
 shortwaveHighHypo <- xts(zoo(shortwaveHighHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 longwaveHighHypo <- xts(zoo(longwaveHighHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 latentHighHypo <- xts(zoo(latentHighHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 sensibleHighHypo <- xts(zoo(sensibleHighHypo$svValue, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
-hyporheicHighHypo <- xts(zoo(Q_b_high, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
+hyporheicHighHypo <- xts(zoo(qhz_high, order.by = seq(mdy_hms("01-01-2014 00:00:00"), by = 3600, length.out = 35065)))
 
 ### NET FLUXES ####
 refall <- shortwaveNetRef + longwaveNetRef + sensibleRef + latentRef
@@ -105,12 +105,12 @@ hypohighall <- shortwaveHighHypo + longwaveHighHypo + sensibleHighHypo + latentH
 #      file = "C:/Users/skati/Documents/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/xts_zooed_data/netHeats.R")
 
 
-# save(shortwaveHighHypo, longwaveHighHypo, latentHighHypo, sensibleHighHypo, hyporheicHighHypo,
-#      file = "C:/Users/skati/Documents/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/xts_zooed_data/highHypoHeat.R")
-# save(shortwaveMedHypo, longwaveMedHypo, latentMedHypo, sensibleMedHypo, hyporheicMedHypo,
-#      file = "C:/Users/skati/Documents/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/xts_zooed_data/medHypoHeat.R")
-# save(shortwaveLittleHypo, longwaveLittleHypo, latentLittleHypo, sensibleLittleHypo, hyporheicLittleHypo,
-#      file = "C:/Users/skati/Documents/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/xts_zooed_data/littleHypoHeat.R")
+save(shortwaveHighHypo, longwaveHighHypo, latentHighHypo, sensibleHighHypo, hyporheicHighHypo,
+     file = "C:/Users/skati/Documents/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/xts_zooed_data/highHypoHeat.R")
+save(shortwaveMedHypo, longwaveMedHypo, latentMedHypo, sensibleMedHypo, hyporheicMedHypo,
+    file = "C:/Users/skati/Documents/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/xts_zooed_data/medHypoHeat.R")
+save(shortwaveLittleHypo, longwaveLittleHypo, latentLittleHypo, sensibleLittleHypo, hyporheicLittleHypo,
+     file = "C:/Users/skati/Documents/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/xts_zooed_data/littleHypoHeat.R")
 # save(shortwaveNetRef, longwaveNetRef, latentRef, sensibleRef,
 #      file = "C:/Users/skati/Documents/TempTool_2020/runs_using_2017_umatilla_aquifer_geometry/xts_zooed_data/refHeat.R")
 # save(shortwaveNet30, longwaveNet30, latent30, sensible30,

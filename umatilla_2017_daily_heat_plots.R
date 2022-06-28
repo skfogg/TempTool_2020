@@ -27,6 +27,7 @@ plot_daily_heat <- function(dummy, sw, lw, sens, latent, hypo = NA, net, fluxcol
            ylab = expression(paste("Heat Flux (kJ  ", m^-2, " ",s^-1, ")")),
            xlab = "Day of Month",
            xaxt = "n",
+           yaxt = "n",
            type = "n")
   # polygon(c(index(sw[1])-6420, index(last(sw))+6420, index(last(sw))+6420, index(sw[1])-6420), c(0,0,-0.4,-0.4),
   #         border = NA,
@@ -61,7 +62,9 @@ plot_daily_heat <- function(dummy, sw, lw, sens, latent, hypo = NA, net, fluxcol
   #       lwd = linew+2,
   #       lty = 1)
   axis(1, at = c(index(dummy[1])-7200, seq(index(dummy[1]), index(last(dummy)), by = 24*3600), index(last(dummy))+7200),
-       labels = c("", "15", "16", "17", ""))
+       labels = c("", "15", "16", "17", ""),
+       cex = 1.2)
+  axis(2, at = c(-0.3, 0.0, 0.3, 0.6), cex = 1.2)
   segments(index(dummy[1])-7140, 0, index(dummy[1])-7140, -0.4)
   segments(index(last(dummy))+6520, 0, index(last(dummy))+6520, -0.4)
   abline(h = 0, lty = 2, lwd = 2)
@@ -76,138 +79,138 @@ days <- c("2016-01-14/2016-01-18 00:00:00", "2016-04-14/2016-04-18 00:00:00",
 hypocol <- "#DAFF47"#"#BFED30" #"#F1E814" "#EDF83B"
 fluxpal <- c(hcl.colors(5, "Plasma")[1:4], hypocol,"black")
 lw <- 5
-ylmts <- c(-0.3,0.8)
+ylmts <- c(-0.35,0.8)
 temp_ylmts <- list(c(-6,6), c(6,18), c(15,27), c(6,18))
 shadecols <- hcl.colors(6, "Vik", rev = T)[1:3]
 hypocols <- hcl.colors(6, "Vik")[1:3]
 
 
 
-for(i in 1:4){
-  #### SHADE DAILY BUDGETS ####
-  png(paste0("plots/2017_umatilla/daily_heat_daily_shade/shade_heat_", i, "_v3.png"),
-      width = 475*5, height = 1800*5,
-      res = 72*5)
-  par(mfrow = c(4,1),
-      mar = c(2,3,1,1),
-      oma = c(0,0,0,0),
-      cex = 1.5,
-      cex.lab = 1.3,
-      cex.axis = 1.5)
-  plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
-                  shortwaveNetRef[days[i]],
-                  longwaveNetRef[days[i]],
-                  sensibleRef[days[i]],
-                  latentRef[days[i]],
-                  hypo = NA,
-                  refall[days[i]],
-                  fluxpal,
-                  ylmts,
-                  linew = 7)
-
-  plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
-                  shortwaveNet30[days[i]],
-                  longwaveNet30[days[i]],
-                  sensible30[days[i]],
-                  latent30[days[i]],
-                  hypo = NA,
-                  shade30all[days[i]],
-                  fluxpal,
-                  ylmts,
-                  linew = 7)
-
-  plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
-                  shortwaveNet60[days[i]],
-                  longwaveNet60[days[i]],
-                  sensible60[days[i]],
-                  latent60[days[i]],
-                  hypo = NA,
-                  shade60all[days[i]],
-                  fluxpal,
-                  ylmts,
-                  linew = 7)
-
-  plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
-                  shortwaveNet90[days[i]],
-                  longwaveNet90[days[i]],
-                  sensible90[days[i]],
-                  latent90[days[i]],
-                  hypo = NA,
-                  shade90all[days[i]],
-                  fluxpal,
-                  ylmts,
-                  linew = 7)
-
-  # mtext("Day of Month", 1, 2, outer = T, cex = 1.5)
-  # mtext(expression(paste("Heat Flux (kJ  ", m^-2, " ",s^-1, ")")), 2, 2, outer = T, cex = 1.5)
-  dev.off()
-}
-
-
-
-for(i in 1:4){
-  #### HYPORHEIC DAILY BUDGETS ####
-  png(paste0("plots/2017_umatilla/daily_heat_daily_shade/hypo_heat_", i, "_v3.png"),
-      width = 475*5, height = 1800*5,
-      res = 72*5)
-  par(mfrow = c(4,1),
-      mar = c(2,3,1,1),
-      oma = c(0,0,0,0),
-      cex = 1.5,
-      cex.lab = 1.3,
-      cex.axis = 1.5)
-  plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
-                  shortwaveNetRef[days[i]],
-                  longwaveNetRef[days[i]],
-                  sensibleRef[days[i]],
-                  latentRef[days[i]],
-                  hypo = NA,
-                  refall[days[i]],
-                  fluxpal,
-                  ylmts,
-                  linew = 7)
-
-  plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
-                  shortwaveLittleHypo[days[i]],
-                  longwaveLittleHypo[days[i]],
-                  sensibleLittleHypo[days[i]],
-                  latentLittleHypo[days[i]],
-                  hyporheicLittleHypo[days[i]],
-                  hypolittleall[days[i]],
-                  fluxpal,
-                  ylmts,
-                  linew = 7)
-
-  plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
-                  shortwaveMedHypo[days[i]],
-                  longwaveMedHypo[days[i]],
-                  sensibleMedHypo[days[i]],
-                  latentMedHypo[days[i]],
-                  hyporheicMedHypo[days[i]],
-                  hypomedall[days[i]],
-                  fluxpal,
-                  ylmts,
-                  linew = 7)
-
-  plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
-                  shortwaveHighHypo[days[i]],
-                  longwaveHighHypo[days[i]],
-                  sensibleHighHypo[days[i]],
-                  latentHighHypo[days[i]],
-                  hyporheicHighHypo[days[i]],
-                  hypohighall[days[i]],
-                  fluxpal,
-                  ylmts,
-                  linew = 7)
-
-  # mtext("Day of Month", 1, 2, outer = T, cex = 1.5)
-  # mtext(expression(paste("Heat Flux (kJ  ", m^-2, " ",s^-1, ")")), 2,2,outer = T, cex = 1.5)
-  dev.off()
-}
+# for(i in 1:4){
+#   #### SHADE DAILY BUDGETS ####
+#   png(paste0("plots/2017_umatilla/daily_heat_daily_shade/shade_heat_", i, "_v3.png"),
+#       width = 475*5, height = 1800*5,
+#       res = 72*5)
+#   par(mfrow = c(4,1),
+#       mar = c(2,3,1,1),
+#       oma = c(0,0,0,0),
+#       cex = 1.5,
+#       cex.lab = 1.3,
+#       cex.axis = 1.5)
+#   plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
+#                   shortwaveNetRef[days[i]],
+#                   longwaveNetRef[days[i]],
+#                   sensibleRef[days[i]],
+#                   latentRef[days[i]],
+#                   hypo = NA,
+#                   refall[days[i]],
+#                   fluxpal,
+#                   ylmts,
+#                   linew = 7)
+#
+#   plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
+#                   shortwaveNet30[days[i]],
+#                   longwaveNet30[days[i]],
+#                   sensible30[days[i]],
+#                   latent30[days[i]],
+#                   hypo = NA,
+#                   shade30all[days[i]],
+#                   fluxpal,
+#                   ylmts,
+#                   linew = 7)
+#
+#   plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
+#                   shortwaveNet60[days[i]],
+#                   longwaveNet60[days[i]],
+#                   sensible60[days[i]],
+#                   latent60[days[i]],
+#                   hypo = NA,
+#                   shade60all[days[i]],
+#                   fluxpal,
+#                   ylmts,
+#                   linew = 7)
+#
+#   plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
+#                   shortwaveNet90[days[i]],
+#                   longwaveNet90[days[i]],
+#                   sensible90[days[i]],
+#                   latent90[days[i]],
+#                   hypo = NA,
+#                   shade90all[days[i]],
+#                   fluxpal,
+#                   ylmts,
+#                   linew = 7)
+#
+#   # mtext("Day of Month", 1, 2, outer = T, cex = 1.5)
+#   # mtext(expression(paste("Heat Flux (kJ  ", m^-2, " ",s^-1, ")")), 2, 2, outer = T, cex = 1.5)
+#   dev.off()
+# }
+#
+#
+#
+# for(i in 1:4){
+#   #### HYPORHEIC DAILY BUDGETS ####
+#   png(paste0("plots/2017_umatilla/daily_heat_daily_shade/hypo_heat_", i, "_v3.png"),
+#       width = 475*5, height = 1800*5,
+#       res = 72*5)
+#   par(mfrow = c(4,1),
+#       mar = c(2,3,1,1),
+#       oma = c(0,0,0,0),
+#       cex = 1.5,
+#       cex.lab = 1.3,
+#       cex.axis = 1.5)
+#   plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
+#                   shortwaveNetRef[days[i]],
+#                   longwaveNetRef[days[i]],
+#                   sensibleRef[days[i]],
+#                   latentRef[days[i]],
+#                   hypo = NA,
+#                   refall[days[i]],
+#                   fluxpal,
+#                   ylmts,
+#                   linew = 7)
+#
+#   plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
+#                   shortwaveLittleHypo[days[i]],
+#                   longwaveLittleHypo[days[i]],
+#                   sensibleLittleHypo[days[i]],
+#                   latentLittleHypo[days[i]],
+#                   hyporheicLittleHypo[days[i]],
+#                   hypolittleall[days[i]],
+#                   fluxpal,
+#                   ylmts,
+#                   linew = 7)
+#
+#   plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
+#                   shortwaveMedHypo[days[i]],
+#                   longwaveMedHypo[days[i]],
+#                   sensibleMedHypo[days[i]],
+#                   latentMedHypo[days[i]],
+#                   hyporheicMedHypo[days[i]],
+#                   hypomedall[days[i]],
+#                   fluxpal,
+#                   ylmts,
+#                   linew = 7)
+#
+#   plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
+#                   shortwaveHighHypo[days[i]],
+#                   longwaveHighHypo[days[i]],
+#                   sensibleHighHypo[days[i]],
+#                   latentHighHypo[days[i]],
+#                   hyporheicHighHypo[days[i]],
+#                   hypohighall[days[i]],
+#                   fluxpal,
+#                   ylmts,
+#                   linew = 7)
+#
+#   # mtext("Day of Month", 1, 2, outer = T, cex = 1.5)
+#   # mtext(expression(paste("Heat Flux (kJ  ", m^-2, " ",s^-1, ")")), 2,2,outer = T, cex = 1.5)
+#   dev.off()
+# }
 
 #### ALL TOGETHER ON 1 PLOT ####
 #### SHADE ####
-png(paste0("plots/2017_umatilla/daily_heat_daily_shade/shade_heat_v4.png"),
+png(paste0("plots/2017_umatilla/updates/shade_heat_v4_update.png"),
     width = 1800*5, height = 1800*5,
     res = 72*5)
 par(mfcol = c(4,4),
@@ -215,7 +218,7 @@ par(mfcol = c(4,4),
     oma = c(0,0,0,0),
     cex = 1.5,
     cex.lab = 1.3,
-    cex.axis = 1.5)
+    cex.axis = 1.6)
 for (i in 1:4){
 plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
                 shortwaveNetRef[days[i]],
@@ -265,7 +268,7 @@ dev.off()
 
 #### HYPORHEIC ####
 
-png(paste0("plots/2017_umatilla/daily_heat_daily_shade/hypo_heat_v4.png"),
+png(paste0("plots/2017_umatilla/updates/hypo_heat_v4_update.png"),
     width = 1800*5, height = 1800*5,
     res = 72*5)
 par(mfcol = c(4,4),
@@ -273,7 +276,7 @@ par(mfcol = c(4,4),
     oma = c(0,0,0,0),
     cex = 1.5,
     cex.lab = 1.3,
-    cex.axis = 1.5)
+    cex.axis = 1.6)
 for (i in 1:4){
 plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
                 shortwaveNetRef[days[i]],
@@ -322,6 +325,19 @@ plot_daily_heat(shortwaveNetRef[plotregionindex[i]],
 dev.off()
 
 
+
+
+
+######################
+
+
+
+
+
+
+
+
+
 ###Legend:
 par(mfrow = c(1,1),
     lend = 1)
@@ -340,6 +356,13 @@ legend(x = 5,  y = 7.7,
        ncol = 1,
        title = "Legend",
        bty = "n")
+
+
+####
+
+
+
+
 
 
 #### UPDATE DAILY TEMP PLOTS ####

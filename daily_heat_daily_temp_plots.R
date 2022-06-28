@@ -108,7 +108,7 @@ hypocols <- hcl.colors(6, "Vik")[1:3]
 
 for(i in 1:4){
 #### SHADE DAILY BUDGETS ####
-png(paste0("plots/2017_umatilla/daily_heat_daily_shade/shade_heat_", i, "_v2.png"),
+png(paste0("plots/2017_umatilla/daily_heat_daily_shade/shade_heat_", i, "_update.png"),
     width = 475*5, height = 1800*5,
     res = 72*5)
 par(mfrow = c(4,1),
@@ -165,7 +165,7 @@ dev.off()
 
 #### HYPORHEIC DAILY BUDGETS ####
 for(i in 1:4){
-png(paste0("plots/2017_umatilla/daily_heat_daily_shade/hypo_heat_", i, "_v2.png"),
+png(paste0("plots/2017_umatilla/daily_heat_daily_shade/hypo_heat_", i, "_update.png"),
     width = 475*5, height = 1800*5,
     res = 72*5)
   par(mfrow = c(4,1),

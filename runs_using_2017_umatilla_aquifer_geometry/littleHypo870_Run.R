@@ -9,10 +9,10 @@ library(xts)
 library(lubridate)
 library(temptool)
 
-connect <- odbcConnect("TempToolFourANSI", uid="root", pwd="MSUFLL!!")
+connect <- odbcConnect("TempToolFourANSI", uid="root", pwd="Kraydie")
 
 littleHypoBins <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 11.98, b=-1.39)
-load(file = "C:/Users/t24x137/Desktop/Old Tower Desktop Folders/TempToolModelTesting2/littleHypoInitTemps.RData")
+load(file = "runs_using_2017_umatilla_aquifer_geometry/initTemps/littleHypoInitTemps.RData")
 
 setSkeleton(firstBin = 1,
             lastBin = 18,
@@ -30,7 +30,7 @@ setTiming(odbcConnection = connect,
           yearsToRun = 4,
           outputInterval = 3600)
 
-####
+###
 ####
 ##### RUN IN ECLIPSE
 ###

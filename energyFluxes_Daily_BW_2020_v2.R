@@ -430,7 +430,7 @@ dev.off()
 
 ###################################
 ##### ANNUAL BUDGET BAR CHART #####
-png("plots/2017_umatilla/annualBudgetBars_v2.png", width = 1000*5, height = 400*5,
+png("plots/2017_umatilla/annualBudgetBars_v2_new.png", width = 1000*5, height = 400*5,
     res = 72*5)
 par(mfrow = c(1,2),
     mar = c(3,3,1,1))
@@ -598,8 +598,8 @@ dev.off()
 # lines(as.zoo((shortwaveHighHypo + hyporheicHighHypo)[yrandhalf]), col = highhypogray, lwd = 2)
 
 ###########################################
-##### ANNUAL GAIN/LOSS BUDGET BAR CHART #####
-png("plots/2017_umatilla/lossBudget_gainBudget.png", width = 800*5, height = 700*5,
+##### * ANNUAL GAIN/LOSS BUDGET BAR CHART #####
+png("plots/2017_umatilla/updates/lossBudget_gainBudget_update_2.png", width = 800*5, height = 700*5,
     res = 72*5)
 par(mfrow = c(1,2),
     mar = c(3,3,1,1))
@@ -631,12 +631,12 @@ barplot(matrix(c(shade90budget2[1,],
 dev.off()
 
 ############################################################
-##### ANNUAL GAIN/LOSS BUDGET BAR CHART as same budget #####
-png("plots/2017_umatilla/lossANDgain_budget_v4.png", width = 800*5, height = 700*5,
+##### * ANNUAL GAIN/LOSS BUDGET BAR CHART as same budget #####
+png("plots/2017_umatilla/updates/lossANDgain_budget_v4_update_2.png", width = 800*5, height = 700*5,
     res = 72*5)
 par(mfrow = c(1,2),
-    mar = c(3,3,1,1),
-    cex.axis = 1.4)
+    mar = c(3,4,1,1),
+    cex.axis = 1.5)
 barplot(matrix(c(shade90budget3[2,]*-1,
                  shade60budget3[2,]*-1,
                  shade30budget3[2,]*-1,
@@ -649,9 +649,9 @@ barplot(matrix(c(shade90budget3[2,]*-1,
         horiz = T,
         col = colmatrix$adjusted,
         #main = "Loss",
-        xlim = c(-0.7,0),
+        xlim = c(-0.5,0),
         xaxt = "n")
-axis(1, at = c(seq(-0.7, 0, by = 0.1)), labels = c(seq(0.7, 0.0, by = -0.1)[1:6], "0.1","0.0"))
+axis(1, at = c(seq(-0.5, 0, by = 0.1)), labels = c(seq(0.5, 0.0, by = -0.1)[1:4], "0.1","0.0"))
 
 barplot(matrix(c(shade90budget3[1,],
                  shade60budget3[1,],
@@ -665,42 +665,43 @@ barplot(matrix(c(shade90budget3[1,],
         horiz = T,
         col = colmatrix$adjusted,
         #main = "Gain",
-        xlim = c(0,0.7))
+        xlim = c(0,0.5))
 dev.off()
 
 ###########################################
 ##### ANNUAL GAIN/LOSS FLUX BAR CHART #####
-png("plots/2017_umatilla/annualFluxLoss_annualFluxGain_v2.png", width = 800*5, height = 700*5,
+png("plots/2017_umatilla/updates/annualFluxLoss_annualFluxGain_v2_update_2.png", width = 800*5, height = 700*5,
     res = 72*5)
 par(mfrow = c(1,2),
-    mar = c(3,3,1,1),
-    cex.axis = 1.4)
-barplot(matrix(c(shade90annflux[2,],
-                 shade60annflux[2,],
-                 shade30annflux[2,],
-                 refannflux[2,],
-                 hypolittleannflux[2,],
-                 hypomedannflux[2,],
-                 hypohighannflux[2,]), nrow = 5, ncol = 7),
+    mar = c(3,4,1,1),
+    cex.axis = 1.5)
+barplot(matrix(c(shade90annflux[2,]/1000,
+                 shade60annflux[2,]/1000,
+                 shade30annflux[2,]/1000,
+                 refannflux[2,]/1000,
+                 hypolittleannflux[2,]/1000,
+                 hypomedannflux[2,]/1000,
+                 hypohighannflux[2,]/1000), nrow = 5, ncol = 7),
         beside = F,
         #names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
         horiz = T,
         col = colmatrix$adjusted,
         #main = "Loss",
-        xlim = c(-2800,0))
-barplot(matrix(c(shade90annflux[1,],
-                 shade60annflux[1,],
-                 shade30annflux[1,],
-                 refannflux[1,],
-                 hypolittleannflux[1,],
-                 hypomedannflux[1,],
-                 hypohighannflux[1,]), nrow = 5, ncol = 7),
+        xlim = c(-25,0)
+        )
+barplot(matrix(c(shade90annflux[1,]/1000,
+                 shade60annflux[1,]/1000,
+                 shade30annflux[1,]/1000,
+                 refannflux[1,]/1000,
+                 hypolittleannflux[1,]/1000,
+                 hypomedannflux[1,]/1000,
+                 hypohighannflux[1,]/1000), nrow = 5, ncol = 7),
         beside = F,
         #names.arg = c("High", "Moderate", "Low", "Control", "Low", "Moderate", "High"),
         horiz = T,
         col = colmatrix$adjusted,
         #main = "Gain",
-        xlim = c(0,2800))
+        xlim = c(0,25))
 dev.off()
 #####
 
@@ -797,6 +798,7 @@ plotmeanscenariofluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, 
            xaxt = "n",
            ylab = "Flux",
            xlab = "Month",
+           yaxt = "n",
            ...)
 
   lines(as.zoo(apply.daily(lw[yrandhalf], mean)),
@@ -839,26 +841,78 @@ plotmeanscenariofluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, 
     #       lwd = 2)
   }
 
-  xaxislabels <- c("Jan", "Mar", "May", "Jul", "Sep", "Nov", "Jan", "Mar", "May", "Jul")
+  xaxislabels <- c("01", "03", "05", "07", "09", "11", "01", "03", "05", "07")
   xaxisat <- c(ymd_hms("2016-01-01 00:00:00"), ymd_hms("2016-03-01 00:00:00"),
                ymd_hms("2016-05-01 00:00:00"), ymd_hms("2016-07-01 00:00:00"),
                ymd_hms("2016-09-01 00:00:00"), ymd_hms("2016-11-01 00:00:00"),
                ymd_hms("2017-01-01 00:00:00"), ymd_hms("2017-03-01 00:00:00"),
                ymd_hms("2017-05-01 00:00:00"), ymd_hms("2017-07-01 00:00:00"))
   axis(1, at = xaxisat, labels = xaxislabels)
+  axis(2, at = c(-0.2, 0.1, 0.0, 0.1, 0.2, 0.3),
+       labels = c("-0.2", "", "0.0", "", "0.2", ""))
 }
+
+plotdailysumfluxes <- function(sw, lw, sens, latent, hypo = NA, fluxcolors, alphanum, borderlwd, middlelwd, ...){
+  plot.zoo(apply.daily(sw[yrandhalf]*10, sum),
+           col = adjustcolor(fluxcolors[1], alpha.f = alphanum),
+           lwd = middlelwd,
+           xaxt = "n",
+           ylab = "Flux",
+           xlab = "Month",
+           # yaxt = "n",
+           ...)
+
+  lines(as.zoo(apply.daily(lw[yrandhalf]*10, sum)),
+        col = adjustcolor(fluxcolors[2], alpha.f = alphanum),
+        lwd = middlelwd)
+
+  lines(as.zoo(apply.daily(latent[yrandhalf]*10, sum)),
+        col = adjustcolor(fluxcolors[4], alpha.f = alphanum),
+        lwd = middlelwd)
+
+  lines(as.zoo(apply.daily(sens[yrandhalf]*10, sum)),
+        col = adjustcolor(fluxcolors[3], alpha.f = alphanum),
+        lwd = middlelwd)
+
+  if(is.na(hypo) == F){
+    lines(as.zoo(apply.daily(hypo[yrandhalf]*10, sum)),
+          col = "black",
+          lwd = middlelwd+2)
+    lines(as.zoo(apply.daily(hypo[yrandhalf]*10, sum)),
+          col = adjustcolor(fluxcolors[5], alpha.f = alphanum),
+          lwd = middlelwd)
+    abline(h = 0, lwd = 2, lty = 2)
+
+  }else{
+
+    abline(h = 0, lwd = 2, lty = 2)
+
+  }
+
+  xaxislabels <- c("01", "03", "05", "07", "09", "11", "01", "03", "05", "07")
+  xaxisat <- c(ymd_hms("2016-01-01 00:00:00"), ymd_hms("2016-03-01 00:00:00"),
+               ymd_hms("2016-05-01 00:00:00"), ymd_hms("2016-07-01 00:00:00"),
+               ymd_hms("2016-09-01 00:00:00"), ymd_hms("2016-11-01 00:00:00"),
+               ymd_hms("2017-01-01 00:00:00"), ymd_hms("2017-03-01 00:00:00"),
+               ymd_hms("2017-05-01 00:00:00"), ymd_hms("2017-07-01 00:00:00"))
+  axis(1, at = xaxisat, labels = xaxislabels)
+  # axis(2, at = c(-0.2, 0.1, 0.0, 0.1, 0.2, 0.3),
+  #      labels = c("-0.2", "", "0.0", "", "0.2", ""))
+}
+
 
 #### controls ####
 fluxpal <- hcl.colors(5, "Plasma")
 alphaparam <- 1
 lwdparam <- 5
 
-png("plots/2017_umatilla/perScenarioMeanFluxPlots.png", width = 800*5, height = 1100*5,
+##### * PER SCENARIO MEAN FLUX PLOTS ####
+png("plots/2017_umatilla/updates/perScenarioMeanFluxPlots_update.png", width = 800*5, height = 1100*5,
     res = 72*5)
 par(mfcol = c(4,2),
     cex.lab = 1.5,
-    cex.axis = 1.5,
-    mar = c(2,2,1,1))
+    cex.axis = 2,
+    mar = c(2,3,1,1))
 ##### REFERENCE/CONTROL #####
 plotmeanscenariofluxes(sw = shortwaveNetRef,
                    lw = longwaveNetRef,
@@ -956,6 +1010,121 @@ dev.off()
 
 
 ##############
+
+#### PER SCENARIO ANNUAL DAILY SUM PLOTS ####
+png("plots/2017_umatilla/updates/dailyCumulative_annualHeat.png", width = 800*5, height = 1100*5,
+    res = 72*5)
+par(mfcol = c(4,2),
+    cex.lab = 1.5,
+    cex.axis = 2,
+    mar = c(2,3,1,1))
+##### REFERENCE/CONTROL #####
+plotdailysumfluxes(sw = shortwaveNetRef,
+                       lw = longwaveNetRef,
+                       sens = sensibleRef,
+                       latent = latentRef,
+                       fluxcolors = fluxpal,
+                       alphanum = alphaparam,
+                       borderlwd = lwdparam,
+                       middlelwd = lwdparam,
+                       ylim = c(-80, 80)
+                   )
+
+##### SHADE 30 ####
+plotdailysumfluxes(sw = shortwaveNet30,
+                       lw = longwaveNet30,
+                       sens = sensible30,
+                       latent = latent30,
+                       fluxcolors = fluxpal,
+                       alphanum = alphaparam,
+                       borderlwd = lwdparam,
+                       middlelwd = lwdparam,
+                   ylim = c(-80, 80)
+                   )
+
+##### SHADE 60 ####
+plotdailysumfluxes(sw = shortwaveNet60,
+                       lw = longwaveNet60,
+                       sens = sensible60,
+                       latent = latent60,
+                       fluxcolors = fluxpal,
+                       alphanum = alphaparam,
+                       borderlwd = lwdparam,
+                       middlelwd = lwdparam,
+                   ylim = c(-80, 80)
+                   )
+
+##### SHADE 90 ####
+plotdailysumfluxes(sw = shortwaveNet90,
+                       lw = longwaveNet90,
+                       sens = sensible90,
+                       latent = latent90,
+                       fluxcolors = fluxpal,
+                       alphanum = alphaparam,
+                       borderlwd = lwdparam,
+                       middlelwd = lwdparam,
+                   ylim = c(-80, 80)
+                   )
+
+##### REFERENCE/CONTROL #####
+plotdailysumfluxes(sw = shortwaveNetRef,
+                       lw = longwaveNetRef,
+                       sens = sensibleRef,
+                       latent = latentRef,
+                       fluxcolors = fluxpal,
+                       alphanum = alphaparam,
+                       borderlwd = lwdparam,
+                       middlelwd = lwdparam,
+                   ylim = c(-80, 80)
+                   )
+
+##### HYPO LOW ####
+plotdailysumfluxes(sw = shortwaveLittleHypo,
+                       lw = longwaveLittleHypo,
+                       sens = sensibleLittleHypo,
+                       latent = latentLittleHypo,
+                       hypo = hyporheicLittleHypo,
+                       fluxcolors = fluxpal,
+                       alphanum = alphaparam,
+                       borderlwd = lwdparam,
+                       middlelwd = lwdparam,
+                   ylim = c(-80, 80)
+                   )
+
+
+##### HYPO MED ####
+plotdailysumfluxes(sw = shortwaveMedHypo,
+                       lw = longwaveMedHypo,
+                       sens = sensibleMedHypo,
+                       latent = latentMedHypo,
+                       hypo = hyporheicMedHypo,
+                       fluxcolors = fluxpal,
+                       alphanum = alphaparam,
+                       borderlwd = lwdparam,
+                       middlelwd = lwdparam,
+                   ylim = c(-80, 80)
+                   )
+
+
+##### HYPO HIGH ####
+plotdailysumfluxes(sw = shortwaveHighHypo,
+                       lw = longwaveHighHypo,
+                       sens = sensibleHighHypo,
+                       latent = latentHighHypo,
+                       hypo = hyporheicHighHypo,
+                       fluxcolors = fluxpal,
+                       alphanum = alphaparam,
+                       borderlwd = lwdparam,
+                       middlelwd = lwdparam,
+                   ylim = c(-80, 80)
+                       )
+dev.off()
+
+
+
+##############
+
+
 
 ################################################
 ###### FLUX PLOTS PER SCENARIO W/ NET FLUX #####
