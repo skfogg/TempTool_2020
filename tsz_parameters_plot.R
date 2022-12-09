@@ -10,7 +10,7 @@ highHypo <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 35.94, b=-1.39)
 medHypo <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 23.96, b=-1.39)
 lowHypo <- hyporheicBins(18, 2, 60, 182*86400, 0.25, 11.98, b=-1.39)
 
-qdwn <- signif(highHypo$entering/sum(highHypo$entering),3)
+qdwn <- signif(highHypo$entering/highHypo$entering[1],3)
 qup <- signif(highHypo$returning/sum(highHypo$returning),3)
 vol <- signif(highHypo$aquiferStorage/sum(highHypo$aquiferStorage),3)
 
